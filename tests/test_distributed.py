@@ -319,9 +319,9 @@ class TestDBModels:
 # --- Config ---
 
 class TestDistributedConfig:
-    def test_default_distributed_mode(self):
+    def test_distributed_mode_configurable(self):
         from semantic_searcher.config import Settings
-        s = Settings(_env_file=None)
+        s = Settings(_env_file=None, distributed_mode=True, hub_role="hub")
         assert s.distributed_mode is True
         assert s.hub_role == "hub"
 

@@ -37,7 +37,11 @@ jobs:
           PYTHONPATH: src
           DISTRIBUTED_MODE: "false"
           HUB_ROLE: standalone
-        run: pytest tests/ -v --tb=short
+          RAID_PATH: /tmp/arcsearch-test
+          WEBINDEX_DIR: /tmp/arcsearch-test
+        run: |
+          mkdir -p /tmp/arcsearch-test/tokenizer
+          pytest tests/ -v --tb=short
 
   lint:
     runs-on: ubuntu-latest
