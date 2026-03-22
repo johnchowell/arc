@@ -1,0 +1,16 @@
+[Unit]
+Description=ArcSearch Crawl Worker
+After=network.target
+
+[Service]
+Type=simple
+User=jc
+WorkingDirectory=/home/jc/arcsearch-worker
+Environment=PYTHONPATH=/home/jc/arcsearch-worker/src
+EnvironmentFile=/home/jc/arcsearch-worker/.env
+ExecStart=/home/jc/arcsearch-worker/venv/bin/python -m uvicorn semantic_searcher.main:app --host 0.0.0.0 --port 8901
+Restart=always
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target

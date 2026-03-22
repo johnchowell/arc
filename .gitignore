@@ -1,0 +1,38 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.egg-info/
+dist/
+build/
+*.egg
+
+# Virtual environment
+venv/
+
+# Environment files (contain secrets)
+.env
+.env.*
+!dev.env
+
+# IDE
+.vscode/
+.idea/
+
+# Data and caches
+.index_cache/
+*.npy
+*.pkl
+*.log
+/data/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Qdrant storage
+qdrant_storage/
+
+# Claude
+.claude/
+alembic.ini

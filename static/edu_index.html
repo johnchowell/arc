@@ -1,0 +1,3034 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ARC Edu Search - Academic Search Engine</title>
+<meta name="description" content="ARC Edu Search is an academic search engine that prioritizes scientific papers, educational resources, and reliable sources.">
+<meta name="keywords" content="academic search, edu search, scientific papers, research, scholarly search">
+<meta name="author" content="ARC Search">
+<link rel="icon" type="image/x-icon" href="/static/favicon.ico">
+<link rel="icon" type="image/svg+xml" href="/static/favicon.svg">
+<link rel="canonical" href="https://edu.arcsearch.net/">
+<link rel="search" type="application/opensearchdescription+xml" title="ARC Edu Search" href="/opensearch.xml">
+
+<!-- Open Graph -->
+<meta property="og:type" content="website">
+<meta property="og:title" content="ARC Edu Search - Academic Search Engine">
+<meta property="og:description" content="AI-powered academic search engine. Find scientific papers, educational resources, and reliable sources.">
+<meta property="og:url" content="https://edu.arcsearch.net/">
+<meta property="og:site_name" content="ARC Edu Search">
+<meta property="og:image" content="https://edu.arcsearch.net/static/logo.svg">
+<meta property="og:image:width" content="200">
+<meta property="og:image:height" content="200">
+
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="ARC Edu Search - Academic Search Engine">
+<meta name="twitter:description" content="AI-powered academic search engine. Find scientific papers, educational resources, and reliable sources.">
+<meta name="twitter:image" content="https://edu.arcsearch.net/static/logo.svg">
+
+<!-- Structured Data -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": "ARC Edu Search",
+  "url": "https://edu.arcsearch.net/",
+  "potentialAction": {
+    "@type": "SearchAction",
+    "target": {
+      "@type": "EntryPoint",
+      "urlTemplate": "https://edu.arcsearch.net/?q={search_term_string}"
+    },
+    "query-input": "required name=search_term_string"
+  }
+}
+</script>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg: #0a0a0a;
+  --surface: #141414;
+  --surface2: #1e1e1e;
+  --border: #2a2a2a;
+  --text: #e0e0e0;
+  --text-dim: #b0b0b0;
+  --accent: #3ddc84;
+  --accent-dim: #2aaa66;
+  --accent-hover: #6aeea5;
+  --glow-hover-box: 0 0 10px rgba(61, 220, 132, 0.6), 0 0 25px rgba(61, 220, 132, 0.35), 0 0 50px rgba(61, 220, 132, 0.15);
+  --glow-hover-text: 0 0 8px rgba(61, 220, 132, 0.6), 0 0 18px rgba(61, 220, 132, 0.3);
+  --green: #3ddc84;
+  --red: #ff4444;
+  --yellow: #ffbb33;
+  --radius: 5px;
+  --glow-text: 0 0 6px rgba(61, 220, 132, 0.5), 0 0 14px rgba(61, 220, 132, 0.25);
+  --glow-box: 0 0 6px rgba(61, 220, 132, 0.4), 0 0 14px rgba(61, 220, 132, 0.15);
+}
+
+body {
+  font-family: 'JetBrains Mono', 'SF Mono', 'Fira Code', 'Consolas', monospace;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  padding-bottom: 44px;
+}
+
+/* --- Settings Button (fixed top-right) --- */
+.settings-btn-fixed {
+  position: fixed;
+  top: 12px;
+  right: 16px;
+  z-index: 100;
+  font-size: 26px;
+  background: transparent;
+  border: none;
+  color: var(--text-dim);
+  cursor: pointer;
+  padding: 6px;
+  line-height: 1;
+  transition: color 0.2s ease;
+}
+.settings-btn-fixed:hover {
+  color: var(--accent);
+}
+
+.btn {
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 8px 16px;
+  border: 2px solid var(--border);
+  border-radius: var(--radius);
+  background: transparent;
+  color: var(--text);
+  cursor: pointer;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  transition: all 0.1s;
+}
+.btn:hover { border-color: var(--accent); color: var(--accent); box-shadow: var(--glow-box); text-shadow: var(--glow-text); }
+.btn:active { transform: translateY(1px); }
+.btn-accent { border-color: var(--accent); color: var(--accent); box-shadow: var(--glow-box); text-shadow: var(--glow-text); }
+.btn-sm { padding: 4px 10px; font-size: 10px; }
+
+/* --- Search Area --- */
+.search-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 15vh;
+  transition: padding-top 0.3s ease;
+}
+.search-container.has-results {
+  padding-top: 24px;
+}
+
+.logo-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  margin-bottom: 32px;
+  transition: all 0.3s ease;
+}
+.logo-icon {
+  height: 48px;
+  width: auto;
+  transition: all 0.3s ease;
+}
+.search-container.has-results .logo-wrap {
+  margin-bottom: 16px;
+  gap: 8px;
+}
+.search-container.has-results .logo-icon {
+  height: 20px;
+  width: auto;
+}
+.logo {
+  font-size: 48px;
+  font-weight: 900;
+  letter-spacing: 6px;
+  text-transform: uppercase;
+  color: var(--text);
+  transition: all 0.3s ease;
+  cursor: default;
+  display: inline-flex;
+}
+.logo-letter {
+  display: inline-block;
+  transition: transform 0.2s ease;
+}
+.logo span { color: var(--accent); text-shadow: var(--glow-text); }
+.logo-plain { color: var(--text) !important; text-shadow: none !important; }
+.logo-fade {
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.logo-fade-r { background-image: linear-gradient(to right, var(--text) 60%, var(--accent) 100%); }
+.logo-fade-l { background-image: linear-gradient(to right, var(--accent) 0%, var(--text) 40%); }
+.search-container.has-results .logo {
+  font-size: 20px;
+}
+
+.search-box {
+  display: flex;
+  width: 100%;
+  max-width: 700px;
+  border: 2px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface);
+  transition: border-color 0.15s;
+}
+.search-box:focus-within { border-color: var(--accent); box-shadow: var(--glow-box); }
+
+.search-input {
+  flex: 1;
+  font-family: inherit;
+  font-size: 16px;
+  padding: 14px 18px;
+  background: transparent;
+  border: none;
+  color: var(--text);
+  outline: none;
+}
+.search-input::placeholder { color: var(--text-dim); }
+
+.search-btn {
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 700;
+  padding: 14px 24px;
+  background: var(--accent);
+  border: none;
+  color: var(--bg);
+  cursor: pointer;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
+.search-btn { transition: all 0.2s ease; }
+.search-btn:hover { background: var(--accent-hover); color: #fff; box-shadow: var(--glow-hover-box); }
+
+.search-mode {
+  display: flex;
+  gap: 8px;
+  margin-top: 12px;
+  align-items: center;
+  flex-wrap: wrap;
+  justify-content: center;
+  max-width: 700px;
+}
+.mode-btn {
+  font-family: inherit;
+  font-size: 11px;
+  padding: 6px 14px;
+  border: 2px solid var(--border);
+  border-radius: var(--radius);
+  background: transparent;
+  color: var(--text-dim);
+  cursor: pointer;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.mode-btn { transition: all 0.2s ease; }
+.mode-btn.active { border-color: var(--accent); color: var(--accent); background: transparent; box-shadow: var(--glow-box); text-shadow: var(--glow-text); }
+.mode-btn:hover { border-color: var(--accent-hover); color: var(--accent-hover); box-shadow: var(--glow-hover-box); text-shadow: var(--glow-hover-text); }
+.mode-btn:not(:first-child) { margin-left: -2px; }
+.mode-btn:hover, .mode-btn.active { z-index: 1; }
+.lang-select {
+  font-family: inherit;
+  font-size: 11px;
+  padding: 6px 10px;
+  border: 2px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface);
+  color: var(--accent);
+  cursor: pointer;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  outline: none;
+  text-shadow: var(--glow-text);
+}
+.lang-select:focus { border-color: var(--accent); box-shadow: var(--glow-box); }
+.multi-drop {
+  position: relative;
+  user-select: none;
+}
+.multi-drop-toggle {
+  font-family: inherit;
+  font-size: 11px;
+  padding: 5px 10px;
+  border: 2px solid var(--border);
+  border-radius: var(--radius);
+  background: transparent;
+  color: var(--text-dim);
+  cursor: pointer;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  white-space: nowrap;
+}
+.multi-drop-toggle { transition: all 0.2s ease; }
+.multi-drop-toggle:hover { border-color: var(--accent-hover); color: var(--accent-hover); box-shadow: var(--glow-hover-box); text-shadow: var(--glow-hover-text); }
+.multi-drop-toggle.has-selection { border-color: var(--accent); color: var(--accent); box-shadow: var(--glow-box); text-shadow: var(--glow-text); }
+.multi-drop-toggle .arrow { font-size: 8px; margin-left: 2px; }
+.multi-drop-toggle .count-badge {
+  font-size: 9px;
+  background: var(--accent);
+  color: var(--bg);
+  font-weight: 700;
+  padding: 0 5px;
+  border-radius: var(--radius);
+  min-width: 14px;
+  text-align: center;
+}
+.multi-drop-menu {
+  display: none;
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  min-width: 160px;
+  background: var(--surface);
+  border: 2px solid var(--border);
+  border-radius: var(--radius);
+  z-index: 150;
+  max-height: 260px;
+  overflow-y: auto;
+}
+.multi-drop.open .multi-drop-menu { display: block; border-color: var(--accent); box-shadow: var(--glow-box); }
+.multi-drop-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 12px;
+  font-size: 11px;
+  color: var(--text-dim);
+  cursor: pointer;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.multi-drop-item:hover { background: var(--surface2); color: var(--accent); text-shadow: var(--glow-text); }
+.multi-drop-item.checked { color: var(--accent); text-shadow: var(--glow-text); }
+.multi-drop-item .check { width: 12px; font-size: 10px; }
+.site-input {
+  font-family: inherit;
+  font-size: 11px;
+  padding: 5px 10px;
+  border: 2px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface);
+  color: var(--text);
+  outline: none;
+  width: 170px;
+  text-transform: lowercase;
+}
+.site-input:focus { border-color: var(--accent); box-shadow: var(--glow-box); }
+.site-input::placeholder { color: var(--text-dim); text-transform: none; }
+
+/* --- Results --- */
+.results-container {
+  max-width: 700px;
+  width: 100%;
+  margin: 24px auto 60px;
+  padding: 0 24px;
+  transition: max-width 0.3s ease;
+}
+
+.results-info {
+  font-size: 11px;
+  color: var(--text-dim);
+  margin-bottom: 16px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--border);
+}
+
+.correction-banner {
+  font-size: 13px;
+  color: var(--text-dim);
+  margin-bottom: 12px;
+}
+.correction-banner .corrected-query {
+  font-style: italic;
+  font-weight: 600;
+  color: var(--text);
+}
+.correction-banner .search-instead {
+  font-size: 12px;
+  display: block;
+  margin-top: 2px;
+}
+.correction-banner .search-instead a {
+  color: var(--accent, #4a90d9);
+  text-decoration: none;
+  cursor: pointer;
+  font-style: italic;
+}
+.correction-banner .search-instead a:hover {
+  text-decoration: underline;
+}
+
+.result-item {
+  margin-bottom: 18px;
+  padding: 14px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface);
+  transition: border-color 0.15s, opacity 0.2s ease;
+}
+.result-item.reranking { opacity: 0; }
+.result-item.reranked { animation: fadeSlideIn 0.25s ease forwards; }
+@keyframes fadeSlideIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.result-item:hover { border-color: var(--accent-dim); }
+
+.result-url {
+  font-size: 11px;
+  color: var(--accent);
+  margin-bottom: 4px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.result-url a { color: var(--accent); text-decoration: none; text-shadow: var(--glow-text); }
+.result-url a:hover { text-decoration: underline; }
+
+.result-title {
+  font-size: 16px;
+  font-weight: 700;
+  margin-bottom: 4px;
+  color: var(--text);
+}
+.result-title a { color: var(--text); text-decoration: none; }
+.result-title a:hover { color: var(--accent); text-shadow: var(--glow-text); }
+
+.result-snippet {
+  font-size: 13px;
+  color: var(--text-dim);
+  line-height: 1.5;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.result-scores {
+  display: flex;
+  gap: 12px;
+  margin-top: 8px;
+  font-size: 10px;
+  color: var(--text-dim);
+}
+.result-scores span { letter-spacing: 0.5px; }
+
+/* --- Image Results (Stable Masonry) --- */
+.image-results {
+  display: flex;
+  gap: 10px;
+  max-width: 1200px;
+  width: 100%;
+}
+.image-col {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  min-width: 0;
+}
+.image-result {
+  border-radius: var(--radius);
+  overflow: hidden;
+  position: relative;
+  cursor: pointer;
+  background: var(--surface2);
+}
+.image-result:hover { opacity: 0.85; }
+.image-result img {
+  width: 100%;
+  display: block;
+  font-size: 0;
+  color: transparent;
+}
+.image-result.img-failed {
+  display: none;
+}
+.image-result .found-badge {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  background: rgba(0,0,0,0.7);
+  color: var(--accent);
+  font-size: 9px;
+  font-weight: 700;
+  padding: 2px 5px;
+  letter-spacing: 0.5px;
+}
+.image-result.explicit img {
+  filter: blur(20px);
+  transition: filter 0.3s;
+}
+.image-result.explicit:hover img {
+  filter: blur(5px);
+}
+.image-result.explicit .nsfw-badge {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: rgba(0,0,0,0.7);
+  color: var(--red);
+  font-size: 10px;
+  font-weight: 700;
+  padding: 4px 10px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  pointer-events: none;
+}
+
+/* Safe search toggle */
+.safe-toggle {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-left: auto;
+  font-size: 11px;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  cursor: pointer;
+  user-select: none;
+}
+.safe-toggle input {
+  appearance: none;
+  width: 28px;
+  height: 14px;
+  background: var(--border);
+  border-radius: 7px;
+  position: relative;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.safe-toggle input:checked {
+  background: var(--accent);
+  box-shadow: var(--glow-box);
+}
+.safe-toggle input::after {
+  content: '';
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 10px;
+  height: 10px;
+  background: var(--text);
+  border-radius: 50%;
+  transition: left 0.2s;
+}
+.safe-toggle input:checked::after {
+  left: 16px;
+}
+
+/* --- Settings Panel --- */
+.feedback-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.7);
+  z-index: 250;
+  justify-content: center;
+  align-items: center;
+}
+.feedback-overlay.open { display: flex; }
+.feedback-panel {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 20px;
+  width: 380px;
+  max-width: 90vw;
+}
+.feedback-stars {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 10px;
+  font-size: 28px;
+}
+.feedback-star {
+  cursor: pointer;
+  color: var(--border);
+  transition: color 0.15s;
+}
+.feedback-star.active { color: #f5a623; }
+.feedback-star:hover { color: #f5a623; }
+
+.settings-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.7);
+  z-index: 200;
+}
+.settings-overlay.open { display: flex; justify-content: flex-end; }
+
+.settings-panel {
+  width: 420px;
+  max-width: 100vw;
+  background: var(--surface);
+  border-left: 2px solid var(--border);
+  height: 100%;
+  overflow-y: auto;
+  padding: 24px;
+}
+
+.settings-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+  padding-bottom: 12px;
+  border-bottom: 2px solid var(--border);
+}
+.settings-header h2 {
+  font-size: 14px;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
+
+.service-card {
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  margin-bottom: 16px;
+  background: var(--surface2);
+}
+.service-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--border);
+}
+.service-name {
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+.service-status {
+  font-size: 10px;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: var(--radius);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+.service-status.running { color: var(--green); border: 1px solid var(--green); }
+.service-status.stopped { color: var(--red); border: 1px solid var(--red); }
+
+.service-body {
+  padding: 12px 16px;
+}
+.service-stat {
+  display: flex;
+  justify-content: space-between;
+  font-size: 11px;
+  padding: 3px 0;
+  color: var(--text-dim);
+}
+.service-stat .val { color: var(--text); font-weight: 600; }
+
+.service-actions {
+  display: flex;
+  gap: 8px;
+  padding: 12px 16px;
+  border-top: 1px solid var(--border);
+}
+
+/* --- Loading --- */
+.spinner {
+  display: none;
+  width: 0;
+  height: 0;
+  border-left: 12px solid transparent;
+  border-right: 12px solid transparent;
+  border-bottom: 20px solid var(--accent);
+  margin: 24px auto;
+  filter: drop-shadow(0 0 6px rgba(74, 158, 255, 0.5)) drop-shadow(0 0 14px rgba(74, 158, 255, 0.25));
+  animation: triangle-pulse 1.2s ease-in-out infinite;
+}
+.spinner.active { display: block; }
+@keyframes triangle-pulse {
+  0%, 100% { filter: drop-shadow(0 0 4px rgba(74, 158, 255, 0.3)) drop-shadow(0 0 8px rgba(74, 158, 255, 0.1)); opacity: 0.6; }
+  50% { filter: drop-shadow(0 0 10px rgba(74, 158, 255, 0.7)) drop-shadow(0 0 25px rgba(74, 158, 255, 0.4)); opacity: 1; }
+}
+
+/* --- Scrollbar --- */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: var(--border); }
+
+/* --- Theme Picker (Settings) --- */
+.settings-section {
+  margin-bottom: 20px;
+}
+.settings-section-label {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--text-dim);
+  margin-bottom: 10px;
+}
+.theme-dots { display: flex; gap: 10px; align-items: center; }
+.theme-dot {
+  width: 28px; height: 28px; border-radius: var(--radius); cursor: pointer;
+  border: 2px solid transparent; transition: border-color 0.15s;
+  box-sizing: border-box;
+}
+.theme-dot.active { border-color: var(--text); }
+.theme-dot:hover { border-color: var(--text-dim); }
+
+/* --- Collapsible Section --- */
+.settings-collapse-toggle {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 16px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface2);
+  cursor: pointer;
+  margin-bottom: 0;
+  user-select: none;
+}
+.settings-collapse-toggle:hover { border-color: var(--accent); }
+.settings-collapse-toggle .collapse-label {
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--text);
+}
+.settings-collapse-toggle .collapse-arrow {
+  font-size: 10px;
+  color: var(--text-dim);
+  transition: transform 0.2s;
+}
+.settings-collapse-toggle.open .collapse-arrow { transform: rotate(180deg); }
+.settings-collapse-body {
+  display: none;
+  padding-top: 12px;
+}
+.settings-collapse-body.open { display: block; }
+
+/* --- Favicon in results --- */
+.result-favicon { width: 16px; height: 16px; vertical-align: middle; margin-right: 6px; }
+
+/* --- Lightbox --- */
+.lightbox {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.85);
+  z-index: 300;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 40px 20px 20px;
+  overflow-y: auto;
+}
+.lightbox.open { display: flex; }
+.lightbox-close {
+  position: fixed;
+  top: 12px;
+  right: 16px;
+  z-index: 301;
+}
+.lightbox-img {
+  max-width: 90vw;
+  max-height: 60vh;
+  object-fit: contain;
+  cursor: pointer;
+  border: 2px solid var(--border);
+  border-radius: var(--radius);
+  margin-bottom: 16px;
+}
+.lightbox-img:hover { border-color: var(--accent); box-shadow: var(--glow-box); }
+.lightbox-info {
+  font-size: 12px;
+  color: var(--text-dim);
+  text-align: center;
+  margin-bottom: 12px;
+  max-width: 600px;
+  word-break: break-all;
+}
+.lightbox-info a { color: var(--accent); text-decoration: none; text-shadow: var(--glow-text); }
+.lightbox-info a:hover { text-decoration: underline; }
+.lightbox-sources {
+  max-width: 600px;
+  width: 100%;
+  margin-bottom: 12px;
+  font-size: 12px;
+}
+.lightbox-sources summary {
+  cursor: pointer;
+  color: var(--accent);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 6px;
+}
+.lightbox-sources-list {
+  list-style: none;
+  padding: 0;
+  margin: 6px 0 0;
+}
+.lightbox-sources-list li {
+  padding: 6px 8px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  margin-bottom: 4px;
+  background: var(--surface2);
+}
+.lightbox-sources-list li a {
+  color: var(--accent);
+  text-decoration: none;
+  word-break: break-all;
+}
+.lightbox-sources-list li a:hover { text-decoration: underline; }
+.lightbox-sources-list .source-title { color: var(--text); display: block; margin-bottom: 2px; }
+.lightbox-sources-list .source-domain { color: var(--text-dim); font-size: 10px; }
+.lightbox-meta {
+  display: flex;
+  gap: 12px;
+  margin-top: 6px;
+  font-size: 10px;
+  color: var(--text-dim);
+}
+.lightbox-meta span { background: var(--surface2); border: 1px solid var(--border); border-radius: var(--radius); padding: 2px 6px; }
+.lightbox-related-label {
+  font-size: 10px;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 8px;
+}
+.lightbox-related {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: center;
+  max-width: 90vw;
+}
+.lightbox-thumb {
+  width: 120px;
+  height: 90px;
+  object-fit: cover;
+  cursor: pointer;
+  border: 2px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface2);
+  transition: border-color 0.15s;
+}
+.lightbox-thumb:hover { border-color: var(--accent); box-shadow: var(--glow-box); }
+.lightbox-thumb.active { border-color: var(--accent); box-shadow: var(--glow-box); }
+/* --- Sponsored Ad Block --- */
+.ad-block {
+  margin-bottom: 12px;
+  padding: 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface2);
+}
+.ad-block-label {
+  font-size: 9px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--text-dim);
+  margin-bottom: 6px;
+}
+.ad-block ins { display: block; }
+
+/* --- Light Theme --- */
+.light-theme {
+  --bg: #f5f5f5;
+  --surface: #ffffff;
+  --surface2: #ececec;
+  --border: #d0d0d0;
+  --text: #1a1a1a;
+  --text-dim: #666666;
+}
+.light-theme .result-item { border-color: var(--border); }
+.light-theme .search-input { background: var(--surface); color: var(--text); border-color: var(--border); }
+.light-theme .search-input::placeholder { color: var(--text-dim); }
+.light-theme .btn { background: transparent; color: var(--text); border-color: var(--border); }
+.light-theme .settings-panel { background: var(--surface); }
+.light-theme .mode-btn { background: transparent; color: var(--text); border-color: var(--border); }
+
+/* --- No Color Theme --- */
+.no-color .logo span { color: var(--text); text-shadow: none; }
+.no-color .logo-fade-r { background-image: linear-gradient(to right, var(--text) 60%, var(--text-dim) 100%); }
+.no-color .logo-fade-l { background-image: linear-gradient(to right, var(--text-dim) 0%, var(--text) 40%); }
+.no-color .search-btn { background: var(--text-dim); color: var(--bg); }
+.no-color .search-btn:hover { background: var(--text); color: var(--bg); box-shadow: none; }
+.no-color .search-box:focus-within { border-color: var(--text-dim); box-shadow: none; }
+.no-color .result-url a { text-shadow: none; }
+.no-color .spinner { filter: none; }
+
+/* --- Autocomplete --- */
+.autocomplete-wrap { position: relative; flex: 1; min-width: 0; }
+.autocomplete-wrap .search-input { width: 100%; }
+.autocomplete-list {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-top: none;
+  border-radius: 0 0 var(--radius) var(--radius);
+  z-index: 200;
+  max-height: 320px;
+  overflow-y: auto;
+  display: none;
+}
+.autocomplete-list.open { display: block; }
+.autocomplete-section {
+  padding: 6px 12px 2px;
+  font-size: 9px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--text-dim);
+}
+.autocomplete-item {
+  padding: 8px 14px;
+  font-size: 13px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--text);
+}
+.autocomplete-item:hover, .autocomplete-item.active {
+  background: var(--surface2);
+  color: var(--accent);
+}
+.autocomplete-item .ac-icon {
+  font-size: 11px;
+  color: var(--text-dim);
+  width: 16px;
+  text-align: center;
+}
+.autocomplete-item .ac-bang {
+  color: var(--accent);
+  font-weight: 700;
+}
+
+/* --- Answer Snippet --- */
+.answer-snippet {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 14px 16px;
+  margin-bottom: 14px;
+  font-size: 13px;
+  line-height: 1.6;
+}
+.answer-snippet-source {
+  font-size: 11px;
+  color: var(--text-dim);
+  margin-top: 8px;
+}
+.answer-snippet-source a { color: var(--accent); text-decoration: none; }
+
+/* --- Related Searches --- */
+.related-searches {
+  margin-top: 20px;
+  padding: 16px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface);
+}
+.related-searches-title {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--text-dim);
+  margin-bottom: 10px;
+}
+.related-tag {
+  display: inline-block;
+  padding: 5px 12px;
+  margin: 3px 4px;
+  font-size: 12px;
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  cursor: pointer;
+  color: var(--text);
+  transition: all 0.15s;
+}
+.related-tag:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+  box-shadow: var(--glow-box);
+}
+
+/* --- Homepage Features --- */
+.homepage-content {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 20px 16px 40px;
+  text-align: center;
+}
+.homepage-content.hidden { display: none; }
+.homepage-tagline {
+  font-size: 14px;
+  color: var(--text-dim);
+  margin-bottom: 24px;
+  line-height: 1.6;
+}
+.homepage-features {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  justify-content: center;
+  margin-bottom: 24px;
+}
+.homepage-feature {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 12px 16px;
+  font-size: 11px;
+  color: var(--text-dim);
+  max-width: 170px;
+  text-align: center;
+  line-height: 1.5;
+}
+.homepage-feature strong { color: var(--text); }
+.homepage-bangs {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 6px;
+  text-align: left;
+}
+.bang-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 11px;
+  color: var(--text-dim);
+  padding: 6px 10px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+.bang-item code {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  padding: 2px 6px;
+  border-radius: 3px;
+  font-size: 11px;
+  color: var(--accent);
+  white-space: nowrap;
+}
+.homepage-history {
+  margin-top: 20px;
+  text-align: center;
+}
+.homepage-history-title {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--text-dim);
+  margin-bottom: 8px;
+  text-align: center;
+}
+.history-item {
+  display: inline-block;
+  padding: 4px 10px;
+  margin: 3px;
+  font-size: 12px;
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  cursor: pointer;
+  color: var(--text-dim);
+  transition: all 0.15s;
+}
+.history-item:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+/* --- Date Range Filter --- */
+.date-select {
+  font-family: inherit;
+  font-size: 11px;
+  padding: 4px 6px;
+  background: var(--surface);
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  cursor: pointer;
+}
+
+/* --- Keyboard Hint --- */
+.kbd {
+  display: inline-block;
+  padding: 1px 5px;
+  font-size: 10px;
+  font-family: inherit;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  color: var(--text-dim);
+  line-height: 1.4;
+}
+
+/* --- Filters Dropdown --- */
+.filters-drop {
+  position: relative;
+  user-select: none;
+}
+.filters-drop-toggle {
+  font-family: inherit;
+  font-size: 11px;
+  padding: 6px 14px;
+  border: 2px solid var(--border);
+  border-radius: var(--radius);
+  background: transparent;
+  color: var(--text-dim);
+  cursor: pointer;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.2s ease;
+}
+.filters-drop-toggle:hover { border-color: var(--accent-hover); color: var(--accent-hover); box-shadow: var(--glow-hover-box); text-shadow: var(--glow-hover-text); }
+.filters-drop-toggle.has-active { border-color: var(--accent); color: var(--accent); box-shadow: var(--glow-box); text-shadow: var(--glow-text); }
+.filters-drop-toggle .arrow { font-size: 8px; }
+.filters-drop-menu {
+  display: none;
+  position: absolute;
+  top: calc(100% + 4px);
+  right: 0;
+  min-width: 280px;
+  max-width: calc(100vw - 24px);
+  background: var(--surface);
+  border: 2px solid var(--border);
+  border-radius: var(--radius);
+  z-index: 150;
+  padding: 12px;
+}
+.filters-drop.open .filters-drop-menu { display: block; border-color: var(--accent); box-shadow: var(--glow-box); }
+.filter-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+.filter-row:last-child { margin-bottom: 0; }
+.filter-label {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--text-dim);
+  min-width: 50px;
+}
+.filter-row .multi-drop { flex: 1; }
+.filter-row .site-input { flex: 1; }
+.filter-row .lang-select { flex: 1; }
+.filter-row .date-select { flex: 1; }
+.filter-row .safe-toggle { margin-left: 0; }
+
+/* --- Info Icon --- */
+.info-btn {
+  font-family: inherit;
+  font-size: 14px;
+  width: 28px;
+  height: 28px;
+  border: 2px solid var(--border);
+  border-radius: 50%;
+  background: transparent;
+  color: var(--text-dim);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  text-decoration: none;
+  line-height: 1;
+}
+.info-btn:hover { border-color: var(--accent); color: var(--accent); box-shadow: var(--glow-box); }
+
+/* --- Info Page --- */
+.info-page {
+  display: none;
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 40px 24px 60px;
+}
+.info-page.visible { display: block; }
+.info-page h2 {
+  font-size: 16px;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: var(--text);
+  margin-bottom: 24px;
+  text-align: center;
+}
+.info-back {
+  font-family: inherit;
+  font-size: 11px;
+  padding: 6px 14px;
+  border: 2px solid var(--border);
+  border-radius: var(--radius);
+  background: transparent;
+  color: var(--text-dim);
+  cursor: pointer;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 24px;
+  transition: all 0.2s ease;
+}
+.info-back:hover { border-color: var(--accent); color: var(--accent); box-shadow: var(--glow-box); }
+
+/* --- Mobile / Tablet Responsive --- */
+@media (max-width: 768px) {
+  .search-container { padding-left: 12px; padding-right: 12px; }
+  .result-title { font-size: 17px; }
+  .result-snippet { font-size: 14px; line-height: 1.6; }
+  .result-url { font-size: 12px; }
+  .result-item { margin-bottom: 22px; padding: 16px; }
+  .mode-btn { padding: 10px 14px; font-size: 12px; }
+  .info-btn { width: 44px; height: 44px; font-size: 18px; }
+  .mobile-hide { display: none !important; }
+  .settings-btn-fixed { font-size: 30px; width: 44px; height: 44px; }
+}
+@media (min-width: 769px) and (max-width: 1024px) {
+  .results-container { max-width: 90vw; }
+}
+</style>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8973146875170696" crossorigin="anonymous"></script>
+</head>
+<body>
+
+<a id="nav-all-btn" href="https://arcsearch.net" style="position:fixed;top:12px;left:16px;z-index:100;font-family:inherit;font-size:11px;padding:6px 14px;border:2px solid var(--border);border-radius:var(--radius);background:transparent;color:var(--text-dim);text-decoration:none;text-transform:uppercase;letter-spacing:1px;transition:all 0.2s ease;display:inline-flex;align-items:center;" onmouseover="this.style.borderColor='var(--accent)';this.style.color='var(--accent)'" onmouseout="this.style.borderColor='';this.style.color=''">ALL</a>
+
+<div style="position:fixed;top:12px;right:16px;z-index:100;display:flex;align-items:center;gap:8px;">
+  <button class="info-btn" onclick="showInfoPage()" title="About ARC Edu Search" style="position:static;">i</button>
+  <button class="settings-btn-fixed" onclick="openSettings()" title="Settings" style="position:static;">&#9881;</button>
+</div>
+
+<!-- Search -->
+<div class="search-container" id="search-container">
+  <div class="logo-wrap" id="logo-wrap"><svg class="logo-icon" id="logo-icon" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+    <defs><filter id="logo-glow"><feGaussianBlur stdDeviation="3" result="blur"/><feComposite in="SourceGraphic" in2="blur" operator="over"/></filter></defs>
+    <g filter="url(#logo-glow)">
+      <path id="wave1" d="M 30,168 C 42,154 50,134 64,114 C 78,94 86,78 102,60 C 118,42 134,30 154,20 C 166,14 174,10 184,6" fill="none" stroke-width="4.5" stroke-linecap="round"/>
+      <path id="wave2" d="M 32,170 C 44,157 54,140 68,122 C 80,106 92,90 108,76 C 122,63 140,52 158,44 C 170,38 178,38 188,35" fill="none" stroke-width="4.5" stroke-linecap="round"/>
+      <path id="wave3" d="M 34,172 C 46,160 56,146 70,130 C 84,114 96,100 112,88 C 128,76 144,66 162,58 C 174,52 182,52 192,49" fill="none" stroke-width="4.5" stroke-linecap="round"/>
+      <path id="wave4" d="M 36,174 C 48,163 58,152 74,138 C 90,124 100,114 116,102 C 132,90 150,82 168,76 C 180,71 186,74 196,72" fill="none" stroke-width="4.5" stroke-linecap="round"/>
+      <path id="wave5" d="M 38,176 C 50,166 62,158 78,148 C 94,138 106,130 122,120 C 138,110 156,102 174,98 C 186,95 192,100 200,99" fill="none" stroke-width="4.5" stroke-linecap="round"/>
+    </g>
+  </svg><div class="logo" id="logo"><span class="logo-letter">E</span><span class="logo-letter">D</span><span class="logo-letter">U</span><span class="logo-letter logo-plain" style="margin-left:12px">S</span><span class="logo-letter logo-fade logo-fade-r">E</span><span class="logo-letter">A</span><span class="logo-letter">R</span><span class="logo-letter">C</span><span class="logo-letter logo-fade logo-fade-l">H</span></div></div>
+  <div class="search-box">
+    <div class="autocomplete-wrap">
+      <input type="text" class="search-input" id="search-input" placeholder="Search academic sources..." autofocus autocomplete="off">
+      <div class="autocomplete-list" id="autocomplete-list"></div>
+    </div>
+    <button class="search-btn" onclick="doSearch()">Go</button>
+  </div>
+  <div class="search-mode">
+    <button class="mode-btn active" data-mode="hybrid">All</button>
+    <button class="mode-btn" data-mode="text">Text</button>
+    <button class="mode-btn" data-mode="image">Image</button>
+    <button class="mode-btn" data-mode="icons">Icons</button>
+    <div class="filters-drop" id="filters-drop">
+      <button class="mode-btn filters-drop-toggle" onclick="toggleFiltersDrop()">Filters <span class="arrow">&#9662;</span></button>
+      <div class="filters-drop-menu">
+        <div class="filter-row">
+          <span class="filter-label">TLD</span>
+          <div class="multi-drop" id="tld-drop">
+            <button class="multi-drop-toggle" onclick="event.stopPropagation(); toggleDrop('tld-drop')">TLD <span class="arrow">&#9662;</span></button>
+            <div class="multi-drop-menu" id="tld-menu"></div>
+          </div>
+        </div>
+        <div class="filter-row">
+          <span class="filter-label">Topic</span>
+          <div class="multi-drop" id="cat-drop">
+            <button class="multi-drop-toggle" onclick="event.stopPropagation(); toggleDrop('cat-drop')">Topic <span class="arrow">&#9662;</span></button>
+            <div class="multi-drop-menu" id="cat-menu"></div>
+          </div>
+        </div>
+        <div class="filter-row">
+          <span class="filter-label">Title</span>
+          <input type="text" class="site-input" id="title-filter" placeholder="title must contain" style="text-transform:none;">
+        </div>
+        <div class="filter-row">
+          <span class="filter-label">Site</span>
+          <input type="text" class="site-input" id="site-filter" placeholder="wikipedia.org" list="domain-list">
+          <datalist id="domain-list"></datalist>
+        </div>
+        <div class="filter-row">
+          <span class="filter-label">Lang</span>
+          <select class="lang-select" id="lang-select" onchange="searchLang=this.value; updateFiltersToggle();">
+            <option value="en" selected>EN</option>
+            <option value="es">ES</option>
+            <option value="fr">FR</option>
+            <option value="de">DE</option>
+            <option value="pt">PT</option>
+            <option value="ja">JA</option>
+            <option value="zh-cn">ZH</option>
+            <option value="">ALL</option>
+          </select>
+        </div>
+        <div class="filter-row">
+          <span class="filter-label">Date</span>
+          <select class="date-select" id="date-filter" onchange="filterDateRange=this.value; updateFiltersToggle(); if(currentQuery) doSearch();">
+            <option value="">Any time</option>
+            <option value="1">Past day</option>
+            <option value="7">Past week</option>
+            <option value="30">Past month</option>
+            <option value="365">Past year</option>
+          </select>
+        </div>
+        <div class="filter-row">
+          <span class="filter-label">Safe</span>
+          <label class="safe-toggle">
+            <input type="checkbox" id="safe-search" checked onchange="safeSearch=this.checked; var s=document.getElementById('safe-search-settings'); if(s) s.checked=this.checked;">
+            Safe search
+          </label>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="homepage-content" id="homepage-content">
+  <div class="homepage-history" id="homepage-history"></div>
+</div>
+
+<!-- Info Page -->
+<div class="info-page" id="info-page">
+  <button class="info-back" onclick="hideInfoPage()">&larr; Back</button>
+  <h2>About ARC Edu Search</h2>
+  <div class="homepage-tagline">
+    AI-powered academic search. <strong>Prioritizes scientific papers, .edu domains, and reliable sources.</strong><br>
+    Like Google Scholar, but with semantic understanding and no tracking.
+  </div>
+  <div class="homepage-features">
+    <div class="homepage-feature"><strong>Academic Focus</strong><br>Boosts .edu, .gov, .org and scientific content</div>
+    <div class="homepage-feature"><strong>Private</strong><br>No tracking, no profiles, no filter bubbles</div>
+    <div class="homepage-feature"><strong>No AI Summaries</strong><br>Environmentally conscious &mdash; no GPU-heavy generation per query</div>
+    <div class="homepage-feature"><strong>Bang Commands</strong><br>Use !w, !yt, !g to redirect instantly</div>
+  </div>
+  <div class="homepage-bangs">
+    <div class="bang-item"><code>!w</code> Wikipedia</div>
+    <div class="bang-item"><code>!yt</code> YouTube</div>
+    <div class="bang-item"><code>!g</code> Google</div>
+    <div class="bang-item"><code>!ddg</code> DuckDuckGo</div>
+    <div class="bang-item"><code>!gh</code> GitHub</div>
+    <div class="bang-item"><code>!r</code> Reddit</div>
+    <div class="bang-item"><code>!so</code> Stack Overflow</div>
+    <div class="bang-item"><code>!maps</code> Maps</div>
+    <div class="bang-item"><code>!img</code> Google Images</div>
+    <div class="bang-item"><code>!news</code> Google News</div>
+    <div class="bang-item"><code>!a</code> Amazon</div>
+    <div class="bang-item"><code>!e</code> eBay</div>
+  </div>
+  <div style="margin-top:24px; font-size:11px; color:var(--text-dim); line-height:1.7;">
+    <strong style="color:var(--text)">How it works:</strong> ARC Edu Search uses AI embeddings to understand the meaning of your query, prioritizing academic papers, educational resources, and authoritative sources from .edu, .gov, and .org domains.<br><br>
+    <strong style="color:var(--text)">Your privacy matters.</strong> No user tracking, no search profiles, no filter bubbles. Everyone sees the same results.
+  </div>
+  <div style="margin-top:24px; font-size:11px; color:var(--text-dim); line-height:1.7;">
+    <strong style="color:var(--text)">Search Syntax</strong><br><br>
+    <code style="background:var(--surface2); border:1px solid var(--border); padding:2px 6px; border-radius:3px; color:var(--accent);">"exact phrase"</code>
+    &mdash; Wrap text in quotes to require that phrase in the page title.<br>
+    <span style="color:var(--text-dim); font-size:10px; margin-left:4px;">Example: <code style="background:var(--surface2); border:1px solid var(--border); padding:1px 5px; border-radius:3px; color:var(--text);">best laptops "2026"</code> &mdash; results must have "2026" in the title</span><br><br>
+    <code style="background:var(--surface2); border:1px solid var(--border); padding:2px 6px; border-radius:3px; color:var(--accent);">&lt;domain&gt;</code>
+    &mdash; Wrap a domain in angle brackets to limit results to that site.<br>
+    <span style="color:var(--text-dim); font-size:10px; margin-left:4px;">Example: <code style="background:var(--surface2); border:1px solid var(--border); padding:1px 5px; border-radius:3px; color:var(--text);">&lt;reddit.com&gt; mechanical keyboards</code> &mdash; only results from reddit.com</span>
+  </div>
+  <div class="mobile-hide" style="margin-top:24px; font-size:10px; color:var(--text-dim)">
+    <strong style="color:var(--text); font-size:11px;">Keyboard Shortcuts</strong><br><br>
+    <span class="kbd">/</span> Focus search &nbsp; <span class="kbd">J</span>/<span class="kbd">K</span> Navigate results &nbsp; <span class="kbd">Enter</span> Open &nbsp; <span class="kbd">Esc</span> Close
+  </div>
+</div>
+
+<footer id="site-footer" style="position:fixed;bottom:0;left:0;right:0;text-align:center;padding:10px 20px;font-size:11px;color:var(--text-dim);background:var(--bg);z-index:90;border-top:1px solid var(--border);">
+  <a href="#" onclick="openSettings();return false" style="color:var(--text-dim);text-decoration:none;margin:0 8px;">Settings</a>
+  <a href="#" onclick="openFeedback();return false" style="color:var(--text-dim);text-decoration:none;margin:0 8px;">Feedback</a>
+  <a href="#" onclick="showInfoPage();return false" style="color:var(--text-dim);text-decoration:none;margin:0 8px;">About</a>
+</footer>
+
+<div class="spinner" id="spinner"></div>
+<div class="results-container" id="results"></div>
+<div id="related-searches" class="related-searches" style="display:none; max-width:700px; margin:20px auto;"></div>
+<div class="spinner" id="load-more-spinner"></div>
+<div id="scroll-sentinel" style="height:1px"></div>
+
+<!-- Lightbox -->
+<div class="lightbox" id="lightbox" onclick="closeLightbox(event)">
+  <button class="btn btn-sm lightbox-close" onclick="closeLightbox()">Close</button>
+  <img class="lightbox-img" id="lightbox-img">
+  <div class="lightbox-info" id="lightbox-info"></div>
+  <div class="lightbox-sources" id="lightbox-sources"></div>
+  <div class="lightbox-related-label" id="lightbox-related-label"></div>
+  <div class="lightbox-related" id="lightbox-related"></div>
+</div>
+
+<!-- Settings Overlay -->
+<div class="settings-overlay" id="settings-overlay" onclick="closeSettingsOutside(event)">
+  <div class="settings-panel" id="settings-panel">
+    <div class="settings-header">
+      <h2>Settings</h2>
+      <button class="btn btn-sm" onclick="closeSettings()">Close</button>
+    </div>
+
+    <!-- Dark/Light Mode -->
+    <div class="settings-section">
+      <div class="settings-section-label">Theme</div>
+      <label style="display:flex; align-items:center; gap:8px; font-size:12px; cursor:pointer;">
+        <input type="checkbox" id="light-mode-toggle" onchange="toggleLightMode(this.checked)">
+        Light mode
+      </label>
+    </div>
+
+    <!-- Theme Picker -->
+    <div class="settings-section">
+      <div class="settings-section-label">Accent Color</div>
+      <div class="theme-dots" id="theme-dots"></div>
+    </div>
+
+    <!-- Safe Search -->
+    <div class="settings-section">
+      <div class="settings-section-label">Safe Search</div>
+      <label style="display:flex; align-items:center; gap:8px; font-size:12px; cursor:pointer;">
+        <input type="checkbox" id="safe-search-settings" checked onchange="safeSearch=this.checked; document.getElementById('safe-search').checked=this.checked;">
+        Filter explicit content
+      </label>
+    </div>
+
+    <!-- Keyboard Shortcuts -->
+    <div class="settings-section mobile-hide">
+      <div class="settings-section-label">Keyboard Shortcuts</div>
+      <div style="font-size:11px; color:var(--text-dim); line-height:2;">
+        <span class="kbd">/</span> Focus search bar<br>
+        <span class="kbd">J</span> / <span class="kbd">K</span> Navigate results<br>
+        <span class="kbd">Enter</span> Open selected result<br>
+        <span class="kbd">Esc</span> Close overlay / clear focus
+      </div>
+    </div>
+
+    <!-- About -->
+    <div class="settings-section">
+      <div class="settings-section-label">About</div>
+      <div style="font-size:11px; color:var(--text-dim); line-height:1.7;">
+        <strong style="color:var(--text)">ARC Edu Search</strong> is an academic search engine that uses
+        AI embeddings to understand meaning, not just match keywords.<br><br>
+        <strong style="color:var(--text)">No AI summaries.</strong> Unlike other search engines, we don't
+        run expensive language model inference on every search. This saves energy and reduces our
+        environmental footprint while giving you direct access to source pages.<br><br>
+        <strong style="color:var(--text)">Your privacy matters.</strong> No user tracking, no search
+        profiles, no filter bubbles. Everyone sees the same results.
+      </div>
+    </div>
+
+    <!-- Feedback -->
+    <div class="settings-section">
+      <div class="settings-section-label">Feedback</div>
+      <button class="btn btn-sm" onclick="openFeedback()" style="margin-top:4px;">Send Feedback</button>
+    </div>
+  </div>
+</div>
+
+<!-- Feedback Modal -->
+<div class="feedback-overlay" id="feedback-overlay" onclick="if(event.target===this)closeFeedback()">
+  <div class="feedback-panel">
+    <h3 style="margin:0 0 12px; color:var(--text);">Send Feedback</h3>
+    <div class="feedback-stars" id="feedback-stars">
+      <span class="feedback-star" data-r="1">&#9733;</span>
+      <span class="feedback-star" data-r="2">&#9733;</span>
+      <span class="feedback-star" data-r="3">&#9733;</span>
+      <span class="feedback-star" data-r="4">&#9733;</span>
+      <span class="feedback-star" data-r="5">&#9733;</span>
+    </div>
+    <select id="feedback-category" style="width:100%;padding:6px;margin-bottom:8px;background:var(--surface2);color:var(--text);border:1px solid var(--border);border-radius:var(--radius);font-size:12px;">
+      <option value="">Category (optional)</option>
+      <option value="search_quality">Search Quality</option>
+      <option value="ui_design">UI / Design</option>
+      <option value="performance">Performance / Speed</option>
+      <option value="feature_request">Feature Request</option>
+      <option value="bug">Bug Report</option>
+      <option value="other">Other</option>
+    </select>
+    <textarea id="feedback-message" rows="4" placeholder="Tell us what you think..." style="width:100%;padding:8px;background:var(--surface2);color:var(--text);border:1px solid var(--border);border-radius:var(--radius);font-size:12px;resize:vertical;box-sizing:border-box;"></textarea>
+    <div style="display:flex;gap:8px;margin-top:8px;justify-content:flex-end;">
+      <button class="btn btn-sm" onclick="closeFeedback()">Cancel</button>
+      <button class="btn btn-sm btn-accent" id="feedback-submit" onclick="submitFeedback()">Submit</button>
+    </div>
+    <div id="feedback-status" style="font-size:11px;color:var(--text-dim);margin-top:6px;text-align:center;"></div>
+  </div>
+</div>
+
+<script>
+const API = '';
+
+// --- Theme Color Picker ---
+const THEMES = {
+  Blue:   { accent: '#4a9eff', dim: '#2a6ecc', hover: '#7ab8ff' },
+  Cyan:   { accent: '#00e5ff', dim: '#00a8b5', hover: '#4df0ff' },
+  Purple: { accent: '#b388ff', dim: '#7c4dff', hover: '#ce9cff' },
+  Green:  { accent: '#69f0ae', dim: '#2e7d50', hover: '#9effc8' },
+  Orange: { accent: '#ffab40', dim: '#c67c00', hover: '#ffc570' },
+  Pink:   { accent: '#ff80ab', dim: '#c94f7c', hover: '#ffa4c4' },
+  None:   { accent: '#999999', dim: '#666666', hover: '#bbbbbb', noGlow: true },
+};
+
+function hexToGlow(hex, a1, a2) {
+  const r = parseInt(hex.slice(1,3),16), g = parseInt(hex.slice(3,5),16), b = parseInt(hex.slice(5,7),16);
+  return `0 0 6px rgba(${r},${g},${b},${a1}), 0 0 14px rgba(${r},${g},${b},${a2})`;
+}
+function hexToHoverGlow(hex) {
+  const r = parseInt(hex.slice(1,3),16), g = parseInt(hex.slice(3,5),16), b = parseInt(hex.slice(5,7),16);
+  return {
+    box: `0 0 10px rgba(${r},${g},${b},0.6), 0 0 25px rgba(${r},${g},${b},0.35), 0 0 50px rgba(${r},${g},${b},0.15)`,
+    text: `0 0 8px rgba(${r},${g},${b},0.6), 0 0 18px rgba(${r},${g},${b},0.3)`,
+  };
+}
+
+function hexShade(hex, factor) {
+  let r = parseInt(hex.slice(1,3),16), g = parseInt(hex.slice(3,5),16), b = parseInt(hex.slice(5,7),16);
+  if (factor > 0) { r+=(255-r)*factor; g+=(255-g)*factor; b+=(255-b)*factor; }
+  else { r*=(1+factor); g*=(1+factor); b*=(1+factor); }
+  return '#'+[r,g,b].map(c=>Math.round(Math.max(0,Math.min(255,c))).toString(16).padStart(2,'0')).join('');
+}
+
+function updateWaveColors(t) {
+  const shades = t.noGlow
+    ? ['#888','#999','#aaa','#999','#888']
+    : [hexShade(t.accent,-0.3), hexShade(t.accent,-0.1), t.accent, hexShade(t.hover,0.0), hexShade(t.hover,0.2)];
+  for (let i = 0; i < 5; i++) {
+    const el = document.getElementById('wave'+(i+1));
+    if (el) el.setAttribute('stroke', shades[i]);
+  }
+}
+
+function updateFavicon(t) {
+  const c = t.noGlow ? '#888' : t.accent;
+  const c2 = t.noGlow ? '#aaa' : (t.hover || c);
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="32">
+    <defs>
+      <linearGradient id="fg" x1="0%" y1="0%" x2="100%" y2="0%">
+        <stop offset="0%" stop-color="${hexShade(c,-0.3)}"/>
+        <stop offset="50%" stop-color="${c}"/>
+        <stop offset="100%" stop-color="${c2}"/>
+      </linearGradient>
+    </defs>
+    <path d="M5,27Q5,21 8,17Q11,12 15,9Q19,6 23,5Q25,4 27,4" fill="none" stroke="url(#fg)" stroke-width="1.8" stroke-linecap="round"/>
+    <path d="M5,27Q6,22 9,18Q13,14 17,11Q21,8 24,7Q26,6 28,6" fill="none" stroke="url(#fg)" stroke-width="1.8" stroke-linecap="round" opacity="0.85"/>
+    <path d="M5,27Q7,23 11,19Q14,16 18,13Q22,11 25,10Q27,9 28,9" fill="none" stroke="url(#fg)" stroke-width="1.8" stroke-linecap="round" opacity="0.7"/>
+    <path d="M5,27Q8,24 12,21Q16,17 20,15Q23,13 26,12Q27,11 29,11" fill="none" stroke="url(#fg)" stroke-width="1.8" stroke-linecap="round" opacity="0.55"/>
+    <path d="M5,27Q9,25 13,22Q17,19 21,17Q24,15 27,14Q28,14 29,13" fill="none" stroke="url(#fg)" stroke-width="1.8" stroke-linecap="round" opacity="0.4"/>
+  </svg>`;
+  const link = document.querySelector('link[type="image/svg+xml"]');
+  if (link) link.href = 'data:image/svg+xml,' + encodeURIComponent(svg);
+}
+
+function applyTheme(name) {
+  const t = THEMES[name];
+  if (!t) return;
+  const root = document.documentElement.style;
+  root.setProperty('--accent', t.accent);
+  root.setProperty('--accent-dim', t.dim);
+  root.setProperty('--accent-hover', t.hover);
+  if (t.noGlow) {
+    root.setProperty('--glow-text', 'none');
+    root.setProperty('--glow-box', 'none');
+    root.setProperty('--glow-hover-box', 'none');
+    root.setProperty('--glow-hover-text', 'none');
+    document.body.classList.add('no-color');
+  } else {
+    root.setProperty('--glow-text', hexToGlow(t.accent, 0.5, 0.25));
+    root.setProperty('--glow-box', hexToGlow(t.accent, 0.4, 0.15));
+    const hg = hexToHoverGlow(t.hover);
+    root.setProperty('--glow-hover-box', hg.box);
+    root.setProperty('--glow-hover-text', hg.text);
+    document.body.classList.remove('no-color');
+  }
+  updateWaveColors(t);
+  updateFavicon(t);
+  localStorage.setItem('theme', name);
+  document.querySelectorAll('.theme-dot').forEach(d => d.classList.toggle('active', d.dataset.theme === name));
+}
+
+(function initThemeDots() {
+  const container = document.getElementById('theme-dots');
+  for (const [name, t] of Object.entries(THEMES)) {
+    const dot = document.createElement('div');
+    dot.className = 'theme-dot';
+    dot.dataset.theme = name;
+    if (t.noGlow) {
+      dot.style.background = 'linear-gradient(135deg, #666 40%, #444 45%, #444 55%, #666 60%)';
+    } else {
+      dot.style.background = t.accent;
+    }
+    dot.title = name;
+    dot.addEventListener('click', () => applyTheme(name));
+    container.appendChild(dot);
+  }
+  applyTheme(localStorage.getItem('theme') || 'Blue');
+})();
+
+let _imageResults = [];
+
+let searchMode = 'hybrid';
+let searchLang = 'en';
+let safeSearch = true;
+let filterTlds = [];
+let filterCategories = [];
+let filterDomain = '';
+let filterTitleMust = [];  // phrases that must appear in title
+let filterDateRange = '';  // days (empty = any time)
+const EDU_BOOST = true;  // edu.arcsearch.net: boost academic/scientific sources
+let _titleSetFromBar = false;
+let _domainSetFromBar = false;
+
+// --- Bang Commands ---
+const BANGS = {
+  '!w':    q => `https://en.wikipedia.org/w/index.php?search=${encodeURIComponent(q)}`,
+  '!yt':   q => `https://www.youtube.com/results?search_query=${encodeURIComponent(q)}`,
+  '!g':    q => `https://www.google.com/search?q=${encodeURIComponent(q)}`,
+  '!ddg':  q => `https://duckduckgo.com/?q=${encodeURIComponent(q)}`,
+  '!gh':   q => `https://github.com/search?q=${encodeURIComponent(q)}`,
+  '!r':    q => `https://www.reddit.com/search/?q=${encodeURIComponent(q)}`,
+  '!so':   q => `https://stackoverflow.com/search?q=${encodeURIComponent(q)}`,
+  '!maps': q => `https://www.google.com/maps/search/${encodeURIComponent(q)}`,
+  '!img':  q => `https://www.google.com/search?tbm=isch&q=${encodeURIComponent(q)}`,
+  '!news': q => `https://news.google.com/search?q=${encodeURIComponent(q)}`,
+  '!a':    q => `https://www.amazon.com/s?k=${encodeURIComponent(q)}`,
+  '!e':    q => `https://www.ebay.com/sch/i.html?_nkw=${encodeURIComponent(q)}`,
+};
+
+function handleBang(rawQ) {
+  const parts = rawQ.trim().split(/\s+/);
+  for (let i = 0; i < parts.length; i++) {
+    const bang = parts[i].toLowerCase();
+    if (BANGS[bang]) {
+      const q = parts.filter((_, j) => j !== i).join(' ');
+      window.open(BANGS[bang](q), '_blank');
+      return true;
+    }
+  }
+  return false;
+}
+
+// --- Search History (localStorage) ---
+function getSearchHistory() {
+  try { return JSON.parse(localStorage.getItem('searchHistory') || '[]'); } catch { return []; }
+}
+function addToSearchHistory(q) {
+  let hist = getSearchHistory().filter(h => h !== q);
+  hist.unshift(q);
+  if (hist.length > 20) hist = hist.slice(0, 20);
+  localStorage.setItem('searchHistory', JSON.stringify(hist));
+}
+function renderSearchHistory() {
+  const container = document.getElementById('homepage-history');
+  if (!container) return;
+  const hist = getSearchHistory();
+  if (!hist.length) { container.innerHTML = ''; return; }
+  container.innerHTML = '<div class="homepage-history-title">Recent Searches</div>'
+    + hist.slice(0, 5).map(h => `<span class="history-item" onclick="document.getElementById('search-input').value='${esc(h).replace(/'/g,"\\'")}'; doSearch();">${esc(h)}</span>`).join('');
+}
+
+// Pagination state
+let currentQuery = '';
+let currentOffset = 0;
+let currentTotal = 0;
+let noCorrect = false;
+let isLoading = false;
+let currentAbortController = null;
+let prefetchAbortController = null;
+let debounceTimer = null;
+// Prefetch cache: stores pre-loaded results keyed by query string
+let prefetchCache = null; // { query, html, meta, imageResults, offset }
+// Next-page prefetch: proactively loads the next page while user reads current
+let nextPageCache = null; // { query, offset, results[], images[], total }
+let nextPageAbort = null;
+const PAGE_SIZE_TEXT = 10;
+const PAGE_SIZE_IMAGE = 30;
+const AD_FIRST = 5;       // first ad appears after this many organic results
+const AD_INTERVAL = 6;    // subsequent ads every N results after the first
+
+function _adBlockHtml() {
+  return '<div class="ad-block"><div class="ad-block-label">Sponsored</div>'
+    + '<ins class="adsbygoogle" style="display:block" data-ad-format="fluid" '
+    + 'data-ad-layout-key="-6t+ed+2i-1n-4w" data-ad-client="ca-pub-8973146875170696" '
+    + 'data-ad-slot="XXXXXXXXXX"></ins></div>';
+}
+
+function _insertAdBlock(container) {
+  container.insertAdjacentHTML('beforeend', _adBlockHtml());
+  const ins = container.querySelector('.ad-block:last-child ins.adsbygoogle');
+  if (ins) _observeAdSlot(ins);
+  try { (window.adsbygoogle = window.adsbygoogle || []).push({}); } catch (e) {}
+}
+
+function _observeAdSlot(ins) {
+  const block = ins.closest('.ad-block');
+  if (!block) return;
+  block.style.display = 'none';
+  const observer = new MutationObserver(() => {
+    const status = ins.getAttribute('data-ad-status');
+    if (status === 'filled') { block.style.display = ''; observer.disconnect(); }
+    else if (status === 'unfilled') { block.style.display = 'none'; observer.disconnect(); }
+    else if (ins.offsetHeight > 0 && ins.children.length > 0) { block.style.display = ''; }
+  });
+  observer.observe(ins, { attributes: true, childList: true, subtree: true });
+  setTimeout(() => { if (block.style.display === 'none') observer.disconnect(); }, 10000);
+}
+
+function _activateAds(container) {
+  const slots = container.querySelectorAll('.ad-block ins.adsbygoogle');
+  for (const ins of slots) {
+    _observeAdSlot(ins);
+    try { (window.adsbygoogle = window.adsbygoogle || []).push({}); } catch (e) {}
+  }
+}
+
+// --- Mode Toggle ---
+let _modeDebounce = null;
+document.querySelectorAll('.mode-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    searchMode = btn.dataset.mode;
+    if (currentQuery) {
+      clearTimeout(_modeDebounce);
+      _modeDebounce = setTimeout(() => doSearch(), 300);
+    }
+  });
+});
+
+// --- Filters dropdown ---
+function toggleFiltersDrop() {
+  const el = document.getElementById('filters-drop');
+  el.classList.toggle('open');
+}
+function updateFiltersToggle() {
+  const toggle = document.querySelector('.filters-drop-toggle');
+  const hasActive = filterTlds.length || filterCategories.length || filterDomain ||
+    filterTitleMust.length || searchLang !== 'en' || filterDateRange || !safeSearch;
+  toggle.classList.toggle('has-active', hasActive);
+}
+// Close filters dropdown on outside click
+document.addEventListener('click', e => {
+  if (!e.target.closest('.filters-drop')) {
+    document.getElementById('filters-drop').classList.remove('open');
+  }
+});
+
+// --- Info Page ---
+function showInfoPage() {
+  document.getElementById('info-page').classList.add('visible');
+  document.getElementById('search-container').style.display = 'none';
+  document.getElementById('homepage-content').style.display = 'none';
+  document.getElementById('results').style.display = 'none';
+  document.querySelector('.settings-btn-fixed').parentElement.style.display = 'none';
+  document.getElementById('site-footer').style.display = 'none';
+  var nb = document.getElementById('nav-all-btn'); if (nb) nb.style.display = 'none';
+}
+function hideInfoPage() {
+  document.getElementById('info-page').classList.remove('visible');
+  document.getElementById('search-container').style.display = '';
+  document.getElementById('homepage-content').style.display = '';
+  document.getElementById('results').style.display = '';
+  document.querySelector('.settings-btn-fixed').parentElement.style.display = '';
+  document.getElementById('site-footer').style.display = '';
+  var nb = document.getElementById('nav-all-btn'); if (nb) nb.style.display = '';
+}
+
+// --- Multi-select dropdown filters ---
+function toggleDrop(id) {
+  const el = document.getElementById(id);
+  const wasOpen = el.classList.contains('open');
+  // Close all
+  document.querySelectorAll('.multi-drop.open').forEach(d => d.classList.remove('open'));
+  if (!wasOpen) el.classList.add('open');
+}
+// Close dropdowns on outside click
+document.addEventListener('click', e => {
+  if (!e.target.closest('.multi-drop')) {
+    document.querySelectorAll('.multi-drop.open').forEach(d => d.classList.remove('open'));
+  }
+});
+
+function buildDropItems(menuEl, values, stateArr, onchange) {
+  menuEl.innerHTML = '';
+  for (const val of values) {
+    const item = document.createElement('div');
+    item.className = 'multi-drop-item' + (stateArr.includes(val) ? ' checked' : '');
+    item.innerHTML = `<span class="check">${stateArr.includes(val) ? '&#10003;' : ''}</span>${esc(val.toUpperCase())}`;
+    item.addEventListener('click', e => {
+      e.stopPropagation();
+      const idx = stateArr.indexOf(val);
+      if (idx >= 0) stateArr.splice(idx, 1); else stateArr.push(val);
+      item.classList.toggle('checked');
+      item.querySelector('.check').innerHTML = stateArr.includes(val) ? '&#10003;' : '';
+      onchange();
+    });
+    menuEl.appendChild(item);
+  }
+}
+
+function updateToggleLabel(dropId, label, stateArr) {
+  const toggle = document.querySelector(`#${dropId} .multi-drop-toggle`);
+  if (stateArr.length === 0) {
+    toggle.innerHTML = `${label} <span class="arrow">&#9662;</span>`;
+    toggle.classList.remove('has-selection');
+  } else {
+    toggle.innerHTML = `${label} <span class="count-badge">${stateArr.length}</span> <span class="arrow">&#9662;</span>`;
+    toggle.classList.add('has-selection');
+  }
+}
+
+function onTldChange() {
+  updateToggleLabel('tld-drop', 'TLD', filterTlds);
+  updateFiltersToggle();
+  if (currentQuery) doSearch();
+}
+function onCatChange() {
+  updateToggleLabel('cat-drop', 'Topic', filterCategories);
+  updateFiltersToggle();
+  if (currentQuery) doSearch();
+}
+
+document.getElementById('site-filter').addEventListener('change', function() {
+  filterDomain = this.value.trim();
+  _domainSetFromBar = false;
+  _syncFiltersToSearchBar();
+  updateFiltersToggle();
+  if (currentQuery) doSearch();
+});
+document.getElementById('title-filter').addEventListener('change', function() {
+  filterTitleMust = this.value.trim() ? this.value.trim().split(',').map(s => s.trim()).filter(Boolean) : [];
+  _titleSetFromBar = false;
+  _syncFiltersToSearchBar();
+  updateFiltersToggle();
+  if (currentQuery) doSearch();
+});
+
+// Parse "quoted phrases" and <domain> from search input, return clean query
+function _parseSearchSyntax(raw) {
+  let domain = null;
+  const titles = [];
+  // Extract <domain>
+  const domainMatch = raw.match(/<([^>]+)>/);
+  if (domainMatch) {
+    domain = domainMatch[1].trim();
+    raw = raw.replace(domainMatch[0], '');
+  }
+  // Extract "quoted phrases"
+  const quoteRe = /"([^"]+)"/g;
+  let m;
+  while ((m = quoteRe.exec(raw)) !== null) {
+    titles.push(m[1].trim());
+  }
+  raw = raw.replace(/"[^"]*"/g, '');
+  return { query: raw.replace(/\s+/g, ' ').trim(), domain, titles };
+}
+
+// Rebuild search bar text from current query + filter state
+function _syncFiltersToSearchBar() {
+  const input = document.getElementById('search-input');
+  let q = input.value;
+  // Strip existing <domain> and "quoted" from input
+  q = q.replace(/<[^>]*>/g, '').replace(/"[^"]*"/g, '').replace(/\s+/g, ' ').trim();
+  // Re-add from filter state
+  if (filterTitleMust.length) q = filterTitleMust.map(t => `"${t}"`).join(' ') + ' ' + q;
+  if (filterDomain) q = `<${filterDomain}> ` + q;
+  input.value = q.trim();
+}
+
+// Sync filter fields from parsed search bar content
+function _syncSearchBarToFilters(parsed) {
+  // Domain: update if parsed from bar, or clear if previously set from bar
+  if (parsed.domain) {
+    filterDomain = parsed.domain;
+    _domainSetFromBar = true;
+    document.getElementById('site-filter').value = filterDomain;
+  } else if (_domainSetFromBar) {
+    filterDomain = '';
+    _domainSetFromBar = false;
+    document.getElementById('site-filter').value = '';
+  }
+  // Title: update if parsed from bar, or clear if previously set from bar
+  if (parsed.titles.length) {
+    filterTitleMust = parsed.titles;
+    _titleSetFromBar = true;
+    document.getElementById('title-filter').value = parsed.titles.join(', ');
+  } else if (_titleSetFromBar) {
+    filterTitleMust = [];
+    _titleSetFromBar = false;
+    document.getElementById('title-filter').value = '';
+  }
+}
+
+async function loadFilters() {
+  try {
+    const res = await fetch(`${API}/api/filters`);
+    const data = await res.json();
+    buildDropItems(document.getElementById('tld-menu'), data.tld_groups, filterTlds, onTldChange);
+    buildDropItems(document.getElementById('cat-menu'), data.categories, filterCategories, onCatChange);
+    // Populate domain datalist
+    const dl = document.getElementById('domain-list');
+    dl.innerHTML = '';
+    for (const d of data.domains.slice(0, 200)) {
+      const opt = document.createElement('option');
+      opt.value = d;
+      dl.appendChild(opt);
+    }
+  } catch (err) {
+    console.error('Failed to load filters:', err);
+  }
+}
+loadFilters();
+
+// --- Autocomplete ---
+let acIdx = -1;
+let acItems = [];
+let acDebounce = null;
+
+async function fetchAutocomplete(q) {
+  const list = document.getElementById('autocomplete-list');
+  acIdx = -1;
+  acItems = [];
+  let html = '';
+
+  // Local history matches
+  const hist = getSearchHistory().filter(h => h.toLowerCase().includes(q.toLowerCase()) && h !== q).slice(0, 3);
+  if (hist.length) {
+    html += '<div class="autocomplete-section">Recent</div>';
+    for (const h of hist) {
+      html += `<div class="autocomplete-item" data-value="${esc(h)}"><span class="ac-icon">&#8635;</span>${esc(h)}</div>`;
+    }
+  }
+
+  // Bang suggestions
+  const lq = q.toLowerCase();
+  if (lq.startsWith('!')) {
+    html += '<div class="autocomplete-section">Bang Commands</div>';
+    for (const [bang, _] of Object.entries(BANGS)) {
+      if (bang.startsWith(lq.split(/\s/)[0])) {
+        const labels = {'!w':'Wikipedia','!yt':'YouTube','!g':'Google','!ddg':'DuckDuckGo','!gh':'GitHub','!r':'Reddit','!so':'Stack Overflow','!maps':'Maps','!img':'Google Images','!news':'Google News','!a':'Amazon','!e':'eBay'};
+        html += `<div class="autocomplete-item" data-value="${bang} "><span class="ac-icon ac-bang">${bang}</span>${labels[bang] || bang}</div>`;
+      }
+    }
+  }
+
+  // Server suggestions
+  if (q.length >= 2 && !lq.startsWith('!')) {
+    try {
+      const res = await fetch(`${API}/api/autocomplete?q=${encodeURIComponent(q)}&limit=5`);
+      if (res.ok) {
+        const data = await res.json();
+        if (data.suggestions && data.suggestions.length) {
+          html += '<div class="autocomplete-section">Popular</div>';
+          for (const s of data.suggestions) {
+            html += `<div class="autocomplete-item" data-value="${esc(s)}"><span class="ac-icon"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><circle cx="10.5" cy="10.5" r="7"/><line x1="15.5" y1="15.5" x2="21" y2="21"/></svg></span>${esc(s)}</div>`;
+          }
+        }
+      }
+    } catch {}
+  }
+
+  if (html) {
+    list.innerHTML = html;
+    list.classList.add('open');
+    acItems = [...list.querySelectorAll('.autocomplete-item')];
+    acItems.forEach((item, i) => {
+      item.addEventListener('mousedown', e => {
+        e.preventDefault();
+        document.getElementById('search-input').value = item.dataset.value;
+        list.classList.remove('open');
+        doSearch();
+      });
+    });
+  } else {
+    list.classList.remove('open');
+  }
+}
+
+function acNav(dir) {
+  if (!acItems.length) return;
+  acIdx = Math.max(-1, Math.min(acItems.length - 1, acIdx + dir));
+  acItems.forEach((item, i) => item.classList.toggle('active', i === acIdx));
+  if (acIdx >= 0) {
+    document.getElementById('search-input').value = acItems[acIdx].dataset.value;
+  }
+}
+
+// --- SSE Parser ---
+function parseSSE(buffer) {
+  const events = [];
+  let remainder = buffer;
+  let idx;
+  while ((idx = remainder.indexOf('\n\n')) !== -1) {
+    const block = remainder.slice(0, idx);
+    remainder = remainder.slice(idx + 2);
+    let event = 'message', data = '';
+    for (const line of block.split('\n')) {
+      if (line.startsWith('event: ')) event = line.slice(7);
+      else if (line.startsWith('data: ')) data = line.slice(6);
+    }
+    if (data) {
+      try { events.push({event, data: JSON.parse(data)}); } catch {}
+    }
+  }
+  return {events, remainder};
+}
+
+// --- Search ---
+document.getElementById('search-input').addEventListener('keydown', e => {
+  const list = document.getElementById('autocomplete-list');
+  if (e.key === 'ArrowDown') { e.preventDefault(); acNav(1); return; }
+  if (e.key === 'ArrowUp') { e.preventDefault(); acNav(-1); return; }
+  if (e.key === 'Escape') { list.classList.remove('open'); return; }
+  if (e.key === 'Enter') { list.classList.remove('open'); doSearch(); return; }
+});
+
+document.getElementById('search-input').addEventListener('blur', () => {
+  setTimeout(() => document.getElementById('autocomplete-list').classList.remove('open'), 150);
+});
+
+// Debounced background prefetch + autocomplete on keystroke
+document.getElementById('search-input').addEventListener('input', () => {
+  noCorrect = false;
+  clearTimeout(debounceTimer);
+  clearTimeout(acDebounce);
+  const q = document.getElementById('search-input').value.trim();
+  // Autocomplete
+  acDebounce = setTimeout(() => { if (q) fetchAutocomplete(q); else document.getElementById('autocomplete-list').classList.remove('open'); }, 150);
+  // Prefetch
+  debounceTimer = setTimeout(() => {
+    if (q && q !== (prefetchCache && prefetchCache.query)) prefetchQuery(q);
+  }, 300);
+});
+
+async function prefetchQuery(q) {
+  // Abort any previous prefetch
+  if (prefetchAbortController) prefetchAbortController.abort();
+  const abortController = new AbortController();
+  prefetchAbortController = abortController;
+
+  // Parse syntax for prefetch too
+  const parsed = _parseSearchSyntax(q);
+  const cleanQ = parsed.query || q;
+  const pfDomain = parsed.domain || filterDomain;
+  const pfTitleMust = parsed.titles.length ? parsed.titles : filterTitleMust;
+
+  const isImage = searchMode === 'image' || searchMode === 'icons';
+  const pageSize = isImage ? PAGE_SIZE_IMAGE : PAGE_SIZE_TEXT;
+  const body = isImage
+    ? {q: cleanQ, limit: pageSize, offset: 0, lang: searchLang || null, safe_search: safeSearch, icons_only: searchMode === 'icons', edu_boost: EDU_BOOST}
+    : {q: cleanQ, limit: pageSize, offset: 0, mode: searchMode, lang: searchLang || null, safe_search: safeSearch, no_correct: false, edu_boost: EDU_BOOST};
+  if (filterTlds.length) body.tld_groups = filterTlds;
+  if (filterCategories.length) body.categories = filterCategories;
+  if (pfDomain) body.domain = pfDomain;
+  if (pfTitleMust.length) body.title_must_contain = pfTitleMust;
+  if (filterDateRange) body.date_range_days = parseInt(filterDateRange);
+
+  const endpoint = isImage ? `${API}/api/images/search/stream` : `${API}/api/search/stream`;
+
+  try {
+    const res = await fetch(endpoint, {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify(body),
+      signal: abortController.signal,
+    });
+    if (!res.ok) return;
+
+    const reader = res.body.getReader();
+    const decoder = new TextDecoder();
+    let sseBuffer = '';
+    let htmlParts = [];
+    let meta = null;
+    let imageResults = [];
+    let resultCount = 0;
+
+    while (true) {
+      const {done, value} = await reader.read();
+      if (done) {
+        if (sseBuffer.trim()) {
+          const {events: finalEvents} = parseSSE(sseBuffer + '\n\n');
+          for (const evt of finalEvents) processEvent(evt);
+        }
+        break;
+      }
+      sseBuffer += decoder.decode(value, {stream: true});
+      const {events, remainder} = parseSSE(sseBuffer);
+      sseBuffer = remainder;
+      for (const evt of events) processEvent(evt);
+    }
+
+    function processEvent(evt) {
+      if (evt.event === 'meta') {
+        meta = evt.data;
+      } else if (evt.event === 'result') {
+        resultCount++;
+        if (isImage) {
+          imageResults.push(evt.data);
+        } else {
+          if (resultCount === AD_FIRST || (resultCount > AD_FIRST && (resultCount - AD_FIRST) % AD_INTERVAL === 0)) {
+            htmlParts.push(_adBlockHtml());
+          }
+          htmlParts.push(resultItemHtml(evt.data));
+        }
+      } else if (evt.event === 'rerank') {
+        // Replace phase-1 results with final reranked results
+        const d = evt.data;
+        if (d.corrected_query) {
+          meta.corrected_query = d.corrected_query;
+          meta.original_query = d.original_query;
+        }
+        meta.total_results = d.total_results;
+        meta.search_time_ms = d.search_time_ms;
+        htmlParts = [];
+        resultCount = 0;
+        for (const r of d.results) {
+          resultCount++;
+          if (resultCount === AD_FIRST || (resultCount > AD_FIRST && (resultCount - AD_FIRST) % AD_INTERVAL === 0)) {
+            htmlParts.push(_adBlockHtml());
+          }
+          htmlParts.push(resultItemHtml(r));
+        }
+      }
+    }
+
+    // Only store if this prefetch wasn't superseded
+    if (!abortController.signal.aborted) {
+      prefetchCache = { query: q, html: htmlParts.join(''), meta, imageResults, offset: resultCount, isImage };
+    }
+  } catch (err) {
+    if (err.name !== 'AbortError') console.error('Prefetch error:', err);
+  }
+}
+
+function doSearchExact(q) {
+  document.getElementById('search-input').value = q;
+  noCorrect = true;
+  prefetchCache = null; // discard prefetch since we're forcing no-correction
+  doSearch();
+}
+
+let _skipPushState = false;
+async function doSearch() {
+  const rawQ = document.getElementById('search-input').value.trim();
+  if (!rawQ) return;
+
+  // Close autocomplete
+  document.getElementById('autocomplete-list').classList.remove('open');
+
+  // Handle bang commands
+  if (handleBang(rawQ)) return;
+
+  // Parse "quoted" title filters and <domain> from search bar
+  const parsed = _parseSearchSyntax(rawQ);
+  _syncSearchBarToFilters(parsed);
+  const q = parsed.query || rawQ;
+
+  // Update URL with search query (skip if navigating via back/forward)
+  if (_skipPushState) {
+    _skipPushState = false;
+  } else {
+    const url = new URL(window.location);
+    url.searchParams.set('q', rawQ);
+    window.history.pushState(null, '', url);
+  }
+
+  // Save to search history
+  addToSearchHistory(rawQ);
+
+  // Hide homepage content and footer
+  const hp = document.getElementById('homepage-content');
+  if (hp) hp.classList.add('hidden');
+  const ft = document.getElementById('site-footer');
+  if (ft) ft.style.display = 'none';
+
+  // Abort any in-flight stream or prefetch
+  if (currentAbortController) currentAbortController.abort();
+  if (prefetchAbortController) prefetchAbortController.abort();
+  if (nextPageAbort) nextPageAbort.abort();
+  clearTimeout(debounceTimer);
+
+  currentQuery = q;
+  currentOffset = 0;
+  currentTotal = 0;
+  _resultPosition = 0;
+  _lastStreamResults = [];
+  _imageResults = [];
+  nextPageCache = null;
+
+  // Hide related searches
+  document.getElementById('related-searches').style.display = 'none';
+
+  const container = document.getElementById('search-container');
+  const spinner = document.getElementById('spinner');
+  const resultsDiv = document.getElementById('results');
+
+  container.classList.add('has-results');
+
+  // Use prefetch cache if it matches the current query
+  if (prefetchCache && prefetchCache.query === q && !noCorrect) {
+    const cached = prefetchCache;
+    prefetchCache = null;
+    const isImage = cached.isImage;
+
+    if (isImage) {
+      resultsDiv.style.maxWidth = '1200px';
+      resultsDiv.innerHTML = '<div class="results-info" id="results-info"></div><div class="image-results" id="image-grid"></div>';
+      _initMasonryCols();
+      _imageResults = cached.imageResults;
+      for (const r of cached.imageResults) _appendToShortestCol(imageItemHtml(r));
+    } else {
+      resultsDiv.style.maxWidth = '700px';
+      resultsDiv.innerHTML = '<div class="results-info" id="results-info"></div>' + cached.html;
+      _activateAds(resultsDiv);
+    }
+
+    if (cached.meta) {
+      currentTotal = cached.meta.total_results;
+      const infoEl = document.getElementById('results-info');
+      if (infoEl) {
+        const label = isImage ? 'images' : 'results';
+        infoEl.textContent = `${cached.meta.total_results} ${label} in ${cached.meta.search_time_ms}ms`;
+      }
+      // Show correction banner if present
+      if (cached.meta.corrected_query && cached.meta.original_query) {
+        const banner = document.createElement('div');
+        banner.className = 'correction-banner';
+        banner.innerHTML = `Showing results for <span class="corrected-query">${esc(cached.meta.corrected_query)}</span>`
+          + `<span class="search-instead">Search instead for <a onclick="doSearchExact('${esc(cached.meta.original_query).replace(/'/g, "\\'")}')">${esc(cached.meta.original_query)}</a></span>`;
+        const infoEl = document.getElementById('results-info');
+        if (infoEl) resultsDiv.insertBefore(banner, infoEl.nextSibling);
+      }
+    }
+    currentOffset = cached.offset;
+    isLoading = false;
+    return;
+  }
+
+  prefetchCache = null;
+  spinner.classList.add('active');
+  resultsDiv.innerHTML = '';
+
+  try {
+    await fetchPageStream(true);
+  } catch (err) {
+    if (err.name === 'AbortError') return;
+    spinner.classList.remove('active');
+    resultsDiv.innerHTML = `<div class="results-info" style="color:var(--red)">Error: ${err.message}</div>`;
+  }
+}
+
+async function fetchPageStream(isFirst) {
+  if (isLoading) return;
+
+  // Use prefetched next page if available
+  if (!isFirst && nextPageCache && nextPageCache.query === currentQuery && nextPageCache.offset === currentOffset) {
+    const cached = nextPageCache;
+    nextPageCache = null;
+    const resultsDiv = document.getElementById('results');
+    const isImage = cached.isImage;
+    if (isImage) {
+      for (const r of cached.images) {
+        _imageResults.push(r);
+        _appendToShortestCol(imageItemHtml(r));
+      }
+    } else {
+      for (const r of cached.results) {
+        _stashResultData(r);
+        const totalIdx = currentOffset + cached.results.indexOf(r) + 1;
+        if (totalIdx === AD_FIRST || (totalIdx > AD_FIRST && (totalIdx - AD_FIRST) % AD_INTERVAL === 0)) {
+          _insertAdBlock(resultsDiv);
+        }
+        resultsDiv.insertAdjacentHTML('beforeend', resultItemHtml(r));
+      }
+    }
+    currentOffset += isImage ? cached.images.length : cached.results.length;
+    currentTotal = cached.total;
+    if (currentOffset < currentTotal) _prefetchNextPage();
+    return;
+  }
+
+  isLoading = true;
+
+  const abortController = new AbortController();
+  currentAbortController = abortController;
+
+  const spinner = isFirst ? document.getElementById('spinner') : document.getElementById('load-more-spinner');
+  spinner.classList.add('active');
+
+  const resultsDiv = document.getElementById('results');
+  const isImage = searchMode === 'image' || searchMode === 'icons';
+  const pageSize = isImage ? PAGE_SIZE_IMAGE : PAGE_SIZE_TEXT;
+
+  const body = isImage
+    ? {q: currentQuery, limit: pageSize, offset: currentOffset, lang: searchLang || null, safe_search: safeSearch, icons_only: searchMode === 'icons', edu_boost: EDU_BOOST}
+    : {q: currentQuery, limit: pageSize, offset: currentOffset, mode: searchMode, lang: searchLang || null, safe_search: safeSearch, no_correct: noCorrect, edu_boost: EDU_BOOST};
+  if (filterTlds.length) body.tld_groups = filterTlds;
+  if (filterCategories.length) body.categories = filterCategories;
+  if (filterDomain) body.domain = filterDomain;
+  if (filterTitleMust.length) body.title_must_contain = filterTitleMust;
+  if (filterDateRange) body.date_range_days = parseInt(filterDateRange);
+  // Reset after building the request so subsequent pages don't carry the flag
+  noCorrect = false;
+
+  const endpoint = isImage ? `${API}/api/images/search/stream` : `${API}/api/search/stream`;
+
+  let resultCount = 0;
+
+  try {
+    const res = await fetch(endpoint, {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify(body),
+      signal: abortController.signal,
+    });
+
+    if (res.status === 503) {
+      throw new Error('Server is busy. Please try again in a moment.');
+    }
+    if (!res.ok) {
+      const errBody = await res.text();
+      throw new Error(`HTTP ${res.status}: ${errBody}`);
+    }
+
+    const reader = res.body.getReader();
+    const decoder = new TextDecoder();
+    let sseBuffer = '';
+
+    // Set up container on first page
+    if (isFirst && isImage) {
+      resultsDiv.style.maxWidth = '1200px';
+      resultsDiv.innerHTML = '<div class="results-info" id="results-info"></div><div class="image-results" id="image-grid"></div>';
+      _initMasonryCols();
+    } else if (isFirst) {
+      resultsDiv.style.maxWidth = '700px';
+      resultsDiv.innerHTML = '<div class="results-info" id="results-info"></div>';
+    }
+
+    function handleEvent(evt) {
+      if (evt.event === 'meta') {
+        currentTotal = evt.data.total_results;
+        const infoEl = document.getElementById('results-info');
+        if (infoEl) {
+          const label = isImage ? 'images' : 'results';
+          infoEl.textContent = `${evt.data.total_results} ${label} in ${evt.data.search_time_ms}ms`;
+        }
+        // Show correction banner if query was auto-corrected
+        if (evt.data.corrected_query && evt.data.original_query && isFirst) {
+          const banner = document.createElement('div');
+          banner.className = 'correction-banner';
+          banner.innerHTML = `Showing results for <span class="corrected-query">${esc(evt.data.corrected_query)}</span>`
+            + `<span class="search-instead">Search instead for <a onclick="doSearchExact('${esc(evt.data.original_query).replace(/'/g, "\\'")}')">${esc(evt.data.original_query)}</a></span>`;
+          resultsDiv.insertBefore(banner, infoEl.nextSibling);
+        }
+        spinner.classList.remove('active');
+      } else if (evt.event === 'result') {
+        resultCount++;
+        if (isImage) {
+          _imageResults.push(evt.data);
+          _appendToShortestCol(imageItemHtml(evt.data));
+        } else {
+          _stashResultData(evt.data);
+          // Insert ad after every AD_INTERVAL results, starting at AD_FIRST
+          const totalIdx = currentOffset + resultCount;
+          if (totalIdx === AD_FIRST || (totalIdx > AD_FIRST && (totalIdx - AD_FIRST) % AD_INTERVAL === 0)) {
+            _insertAdBlock(resultsDiv);
+          }
+          resultsDiv.insertAdjacentHTML('beforeend', resultItemHtml(evt.data));
+        }
+      } else if (evt.event === 'rerank') {
+        // Phase 2: replace results with reranked order + better snippets
+        const d = evt.data;
+        // Update meta info
+        currentTotal = d.total_results;
+        const infoEl = document.getElementById('results-info');
+        if (infoEl) {
+          const label = isImage ? 'images' : 'results';
+          infoEl.textContent = `${d.total_results} ${label} in ${d.search_time_ms}ms`;
+        }
+        // Show correction banner if present
+        if (d.corrected_query && d.original_query && isFirst) {
+          const existing = resultsDiv.querySelector('.correction-banner');
+          if (!existing) {
+            const banner = document.createElement('div');
+            banner.className = 'correction-banner';
+            banner.innerHTML = `Showing results for <span class="corrected-query">${esc(d.corrected_query)}</span>`
+              + `<span class="search-instead">Search instead for <a onclick="doSearchExact('${esc(d.original_query).replace(/'/g, "\\'")}')">${esc(d.original_query)}</a></span>`;
+            const info = document.getElementById('results-info');
+            if (info) resultsDiv.insertBefore(banner, info.nextSibling);
+          }
+        }
+        // Remove old result items and ads, keep results-info and correction banner
+        const oldItems = resultsDiv.querySelectorAll('.result-item, .ad-slot');
+        oldItems.forEach(el => el.remove());
+        // Insert reranked results with staggered fade-in
+        _resultPosition = currentOffset;
+        resultCount = 0;
+        _lastStreamResults = [];
+        for (let i = 0; i < d.results.length; i++) {
+          _stashResultData(d.results[i]);
+          resultCount++;
+          const totalIdx = currentOffset + resultCount;
+          if (totalIdx === AD_FIRST || (totalIdx > AD_FIRST && (totalIdx - AD_FIRST) % AD_INTERVAL === 0)) {
+            _insertAdBlock(resultsDiv);
+          }
+          const html = resultItemHtml(d.results[i]);
+          resultsDiv.insertAdjacentHTML('beforeend', html);
+          const inserted = resultsDiv.lastElementChild;
+          inserted.style.animationDelay = `${i * 30}ms`;
+          inserted.classList.add('reranked');
+        }
+        // Refresh answer snippet with reranked data
+        const oldAnswer = document.getElementById('answer-snippet');
+        if (oldAnswer) oldAnswer.remove();
+        _showAnswerSnippet();
+      } else if (evt.event === 'error') {
+        resultsDiv.insertAdjacentHTML('beforeend',
+          `<div class="results-info" style="color:var(--red)">Error: ${esc(evt.data.message)}</div>`);
+      }
+    }
+
+    while (true) {
+      const {done, value} = await reader.read();
+      if (done) {
+        // Flush any trailing SSE block that doesn't end with \n\n
+        if (sseBuffer.trim()) {
+          const {events: finalEvents} = parseSSE(sseBuffer + '\n\n');
+          finalEvents.forEach(handleEvent);
+        }
+        break;
+      }
+      sseBuffer += decoder.decode(value, {stream: true});
+      const {events, remainder} = parseSSE(sseBuffer);
+      sseBuffer = remainder;
+      events.forEach(handleEvent);
+    }
+    currentOffset += resultCount;
+    // After first page of text results, show answer snippet + fetch related
+    if (isFirst && !isImage && resultCount > 0) {
+      _showAnswerSnippet();
+      _fetchRelatedSearches(currentQuery);
+    }
+    // Proactively prefetch next page while user reads current results
+    if (currentOffset < currentTotal) {
+      _prefetchNextPage();
+    }
+  } catch (err) {
+    if (err.name !== 'AbortError') throw err;
+  } finally {
+    spinner.classList.remove('active');
+    isLoading = false;
+  }
+}
+
+async function _prefetchNextPage() {
+  if (nextPageAbort) nextPageAbort.abort();
+  const q = currentQuery;
+  const off = currentOffset;
+  const isImage = searchMode === 'image' || searchMode === 'icons';
+  const pageSize = isImage ? PAGE_SIZE_IMAGE : PAGE_SIZE_TEXT;
+  const ac = new AbortController();
+  nextPageAbort = ac;
+  nextPageCache = null;
+
+  const body = isImage
+    ? {q, limit: pageSize, offset: off, lang: searchLang || null, safe_search: safeSearch, icons_only: searchMode === 'icons', edu_boost: EDU_BOOST}
+    : {q, limit: pageSize, offset: off, mode: searchMode, lang: searchLang || null, safe_search: safeSearch, no_correct: true, edu_boost: EDU_BOOST};
+  if (filterTlds.length) body.tld_groups = filterTlds;
+  if (filterCategories.length) body.categories = filterCategories;
+  if (filterDomain) body.domain = filterDomain;
+  if (filterTitleMust.length) body.title_must_contain = filterTitleMust;
+  if (filterDateRange) body.date_range_days = parseInt(filterDateRange);
+
+  const endpoint = isImage ? `${API}/api/images/search/stream` : `${API}/api/search/stream`;
+  try {
+    const res = await fetch(endpoint, {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify(body),
+      signal: ac.signal,
+    });
+    if (!res.ok) return;
+    const reader = res.body.getReader();
+    const decoder = new TextDecoder();
+    let sseBuffer = '';
+    const results = [];
+    const images = [];
+    let total = 0;
+
+    while (true) {
+      const {done, value} = await reader.read();
+      if (done) {
+        if (sseBuffer.trim()) {
+          const {events} = parseSSE(sseBuffer + '\n\n');
+          for (const evt of events) {
+            if (evt.event === 'meta') total = evt.data.total_results;
+            else if (evt.event === 'result') { if (isImage) images.push(evt.data); else results.push(evt.data); }
+            else if (evt.event === 'rerank' && evt.data.results) { results.length = 0; results.push(...evt.data.results); total = evt.data.total_results; }
+          }
+        }
+        break;
+      }
+      sseBuffer += decoder.decode(value, {stream: true});
+      const {events, remainder} = parseSSE(sseBuffer);
+      sseBuffer = remainder;
+      for (const evt of events) {
+        if (evt.event === 'meta') total = evt.data.total_results;
+        else if (evt.event === 'result') { if (isImage) images.push(evt.data); else results.push(evt.data); }
+        else if (evt.event === 'rerank' && evt.data.results) { results.length = 0; results.push(...evt.data.results); total = evt.data.total_results; }
+      }
+    }
+    // Only cache if query still matches
+    if (q === currentQuery && !ac.signal.aborted) {
+      nextPageCache = {query: q, offset: off, results, images, total, isImage};
+    }
+  } catch (e) { /* aborted or failed — ignore */ }
+}
+
+function renderResults(data, el) {
+  el.style.maxWidth = '700px';
+  let html = `<div class="results-info" id="results-info">${data.total_results} results in ${data.search_time_ms}ms</div>`;
+  for (const r of data.results) {
+    html += resultItemHtml(r);
+  }
+  el.innerHTML = html;
+}
+
+function appendTextResults(data) {
+  const el = document.getElementById('results');
+  for (const r of data.results) {
+    el.insertAdjacentHTML('beforeend', resultItemHtml(r));
+  }
+}
+
+let _resultPosition = 0;
+function resultItemHtml(r) {
+  const pos = _resultPosition++;
+  let domain = '';
+  try { domain = new URL(r.url).hostname; } catch {}
+  const favicon = domain ? `<img class="result-favicon" src="https://www.google.com/s2/favicons?domain=${encodeURIComponent(domain)}&sz=16" onerror="this.style.display='none'" alt="">` : '';
+  return `
+    <div class="result-item" data-pos="${pos}" data-page-id="${r.page_id}" data-url="${esc(r.url)}">
+      <div class="result-url">${favicon}<a href="${esc(r.url)}" target="_blank">${esc(r.url)}</a></div>
+      <div class="result-title"><a href="${esc(r.url)}" target="_blank">${esc(r.title || 'Untitled')}</a></div>
+      <div class="result-snippet">${esc(r.snippet)}</div>
+      <div class="result-scores">
+        <span>SCORE ${r.score.toFixed(3)}</span>
+        <span>TEXT ${r.text_score.toFixed(3)}</span>
+        <span>IMG ${r.image_score.toFixed(3)}</span>
+      </div>
+    </div>`;
+}
+
+// --- Click tracking & bounce detection ---
+let _lastClick = null; // { query, url, time }
+
+function _trackClick(url, position) {
+  const query = currentQuery;
+  if (!query) return;
+  _lastClick = { query, url, time: Date.now() };
+  fetch(`${API}/api/click`, {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({ query, url, position }),
+  }).catch(() => {});
+}
+
+function _checkBounce() {
+  if (!_lastClick) return;
+  const dwell = Date.now() - _lastClick.time;
+  fetch(`${API}/api/bounce`, {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({ query: _lastClick.query, url: _lastClick.url, dwell_time_ms: dwell }),
+  }).catch(() => {});
+  _lastClick = null;
+}
+
+document.addEventListener('click', (e) => {
+  const item = e.target.closest('.result-item[data-pos]');
+  if (!item) return;
+  const link = e.target.closest('a[href]');
+  if (!link) return;
+  _trackClick(item.dataset.url, parseInt(item.dataset.pos));
+});
+
+window.addEventListener('focus', () => {
+  if (_lastClick) _checkBounce();
+});
+
+function renderImageResults(data, el) {
+  el.style.maxWidth = '1200px';
+  el.innerHTML = `<div class="results-info" id="results-info">${data.total_results} images in ${data.search_time_ms}ms</div><div class="image-results" id="image-grid"></div>`;
+  _initMasonryCols();
+  for (const r of data.results) {
+    _appendToShortestCol(imageItemHtml(r));
+  }
+}
+
+function appendImageResults(data) {
+  for (const r of data.results) {
+    _appendToShortestCol(imageItemHtml(r));
+  }
+}
+
+// --- Stable masonry: fixed column divs, append to shortest ---
+let _masonryCols = [];
+let _masonryNext = 0;
+
+function _getColCount() {
+  const w = window.innerWidth;
+  if (w <= 700) return 2;
+  if (w <= 1000) return 3;
+  return 4;
+}
+
+function _initMasonryCols() {
+  const grid = document.getElementById('image-grid');
+  if (!grid) return;
+  grid.innerHTML = '';
+  _masonryCols = [];
+  _masonryNext = 0;
+  const n = _getColCount();
+  for (let i = 0; i < n; i++) {
+    const col = document.createElement('div');
+    col.className = 'image-col';
+    grid.appendChild(col);
+    _masonryCols.push(col);
+  }
+}
+
+function _appendToShortestCol(html) {
+  if (!_masonryCols.length) return;
+  // Find shortest column; on ties (e.g. images not yet loaded) use round-robin
+  let shortestIdx = 0, minH = _masonryCols[0].offsetHeight;
+  for (let i = 1; i < _masonryCols.length; i++) {
+    const h = _masonryCols[i].offsetHeight;
+    if (h < minH) { minH = h; shortestIdx = i; }
+  }
+  // If all columns are same height, round-robin to distribute evenly
+  const allSame = _masonryCols.every(c => c.offsetHeight === minH);
+  if (allSame) {
+    shortestIdx = _masonryNext % _masonryCols.length;
+  }
+  _masonryNext++;
+  _masonryCols[shortestIdx].insertAdjacentHTML('beforeend', html);
+}
+
+function imageItemHtml(r) {
+  const badge = r.found_on > 1 ? `<span class="found-badge">${r.found_on} pages</span>` : '';
+  const explicitClass = r.possibly_explicit ? ' explicit' : '';
+  const nsfwBadge = r.possibly_explicit ? '<span class="nsfw-badge">Explicit</span>' : '';
+  return `
+    <div class="image-result${explicitClass}" onclick="openLightbox(${_imageResults.length - 1})" title="${esc(r.alt_text || r.page_title || '')}">
+      <img src="${esc(r.image_url)}" alt="${esc(r.alt_text)}" loading="lazy"
+           onerror="this.closest('.image-result').classList.add('img-failed')">
+      ${nsfwBadge}${badge}
+    </div>`;
+}
+
+// --- Infinite Scroll ---
+const scrollSentinel = document.getElementById('scroll-sentinel');
+const scrollObserver = new IntersectionObserver(entries => {
+  if (entries[0].isIntersecting && currentOffset < currentTotal && !isLoading && currentQuery) {
+    fetchPageStream(false);
+  }
+}, { rootMargin: '800px' });
+scrollObserver.observe(scrollSentinel);
+
+function esc(s) {
+  const d = document.createElement('div');
+  d.textContent = s || '';
+  return d.innerHTML;
+}
+
+// --- Lightbox ---
+function openLightbox(idx) {
+  const r = _imageResults[idx];
+  if (!r) return;
+
+  document.getElementById('lightbox-img').src = r.image_url;
+  document.getElementById('lightbox-img').onclick = () => window.open(r.image_url, '_blank');
+
+  const info = document.getElementById('lightbox-info');
+  const title = r.page_title || r.alt_text || 'Untitled';
+  info.innerHTML = r.page_url
+    ? `${esc(title)} &mdash; <a href="${esc(r.page_url)}" target="_blank">${esc(r.page_url)}</a>`
+    : esc(title);
+
+  // Find same-page images
+  const related = [];
+  _imageResults.forEach((x, i) => { if (x.page_id === r.page_id && i !== idx) related.push({item: x, idx: i}); });
+  const label = document.getElementById('lightbox-related-label');
+  const relDiv = document.getElementById('lightbox-related');
+
+  if (related.length > 0) {
+    label.textContent = `From same page (${related.length})`;
+    relDiv.innerHTML = related.map(t =>
+      `<img class="lightbox-thumb" src="${esc(t.item.image_url)}" onclick="event.stopPropagation();openLightbox(${t.idx})" onerror="this.style.display='none'">`
+    ).join('');
+  } else {
+    label.textContent = '';
+    relDiv.innerHTML = '';
+  }
+
+  // Fetch image sources & metadata
+  const sourcesDiv = document.getElementById('lightbox-sources');
+  sourcesDiv.innerHTML = '';
+  fetch(`${API}/api/image/sources?url=${encodeURIComponent(r.image_url)}`)
+    .then(res => res.json())
+    .then(data => {
+      let html = '';
+      // Metadata badges
+      const meta = data.metadata || {};
+      const badges = [];
+      if (data.alt_text) badges.push(`Alt: ${esc(data.alt_text)}`);
+      if (meta.found_on_pages != null) badges.push(`Found on ${meta.found_on_pages} page${meta.found_on_pages !== 1 ? 's' : ''}`);
+      if (meta.nsfw_score != null) badges.push(`NSFW: ${meta.nsfw_score}`);
+      if (meta.icon_score != null) badges.push(`Icon: ${meta.icon_score}`);
+      if (badges.length) html += `<div class="lightbox-meta">${badges.map(b => `<span>${b}</span>`).join('')}</div>`;
+
+      // Source pages
+      const sources = data.sources || [];
+      if (sources.length > 0) {
+        html += `<details${sources.length <= 5 ? ' open' : ''}>`;
+        html += `<summary>Found on ${sources.length} page${sources.length !== 1 ? 's' : ''}</summary>`;
+        html += '<ul class="lightbox-sources-list">';
+        for (const s of sources) {
+          html += `<li>
+            <span class="source-title">${esc(s.title)}</span>
+            <a href="${esc(s.url)}" target="_blank">${esc(s.url)}</a>
+            <span class="source-domain">${esc(s.domain || '')}</span>
+          </li>`;
+        }
+        html += '</ul></details>';
+      }
+      sourcesDiv.innerHTML = html;
+    })
+    .catch(() => {});
+
+  document.getElementById('lightbox').classList.add('open');
+}
+
+function closeLightbox(event) {
+  if (event && event.target !== document.getElementById('lightbox') && !event.target.classList.contains('lightbox-close')) return;
+  document.getElementById('lightbox').classList.remove('open');
+}
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape' && document.getElementById('lightbox').classList.contains('open')) {
+    document.getElementById('lightbox').classList.remove('open');
+  }
+});
+
+// --- Settings ---
+// --- Feedback ---
+let _feedbackRating = 0;
+document.querySelectorAll('.feedback-star').forEach(star => {
+  star.addEventListener('click', () => {
+    _feedbackRating = parseInt(star.dataset.r);
+    document.querySelectorAll('.feedback-star').forEach(s => {
+      s.classList.toggle('active', parseInt(s.dataset.r) <= _feedbackRating);
+    });
+  });
+  star.addEventListener('mouseenter', () => {
+    const r = parseInt(star.dataset.r);
+    document.querySelectorAll('.feedback-star').forEach(s => {
+      s.classList.toggle('active', parseInt(s.dataset.r) <= r);
+    });
+  });
+});
+document.getElementById('feedback-stars').addEventListener('mouseleave', () => {
+  document.querySelectorAll('.feedback-star').forEach(s => {
+    s.classList.toggle('active', parseInt(s.dataset.r) <= _feedbackRating);
+  });
+});
+
+function openFeedback() {
+  _feedbackRating = 0;
+  document.querySelectorAll('.feedback-star').forEach(s => s.classList.remove('active'));
+  document.getElementById('feedback-category').value = '';
+  document.getElementById('feedback-message').value = '';
+  document.getElementById('feedback-status').textContent = '';
+  document.getElementById('feedback-overlay').classList.add('open');
+}
+function closeFeedback() {
+  document.getElementById('feedback-overlay').classList.remove('open');
+}
+function submitFeedback() {
+  if (!_feedbackRating) {
+    document.getElementById('feedback-status').textContent = 'Please select a rating.';
+    return;
+  }
+  const btn = document.getElementById('feedback-submit');
+  btn.disabled = true;
+  btn.textContent = 'Sending...';
+  fetch(`${API}/api/feedback`, {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({
+      rating: _feedbackRating,
+      category: document.getElementById('feedback-category').value || null,
+      message: document.getElementById('feedback-message').value || null,
+      page: window.location.href,
+    }),
+  })
+  .then(r => r.json())
+  .then(data => {
+    if (data.ok) {
+      document.getElementById('feedback-status').textContent = 'Thank you for your feedback!';
+      setTimeout(closeFeedback, 1500);
+    } else {
+      document.getElementById('feedback-status').textContent = 'Failed to submit. Please try again.';
+    }
+  })
+  .catch(() => {
+    document.getElementById('feedback-status').textContent = 'Failed to submit. Please try again.';
+  })
+  .finally(() => {
+    btn.disabled = false;
+    btn.textContent = 'Submit';
+  });
+}
+
+function openSettings() {
+  document.getElementById('settings-overlay').classList.add('open');
+}
+function closeSettings() {
+  document.getElementById('settings-overlay').classList.remove('open');
+}
+function closeSettingsOutside(e) {
+  if (e.target === document.getElementById('settings-overlay')) closeSettings();
+}
+
+// Handle ?q= URL parameter: populate search input, trigger search
+(function() {
+  const params = new URLSearchParams(window.location.search);
+  const q = params.get('q');
+  if (q) {
+    document.getElementById('search-input').value = q;
+    setTimeout(doSearch, 0);
+  }
+})();
+
+// --- Logo rolling hover effect ---
+(function() {
+  const letters = document.querySelectorAll('#logo .logo-letter');
+  const scales = [1.15, 1.07];
+  function reset() {
+    letters.forEach(l => l.style.transform = '');
+  }
+  letters.forEach((letter, i) => {
+    letter.addEventListener('mouseenter', () => {
+      letters.forEach(l => l.style.transform = '');
+      letter.style.transform = `scale(${scales[0]})`;
+      if (i > 0) letters[i - 1].style.transform = `scale(${scales[1]})`;
+      if (i < letters.length - 1) letters[i + 1].style.transform = `scale(${scales[1]})`;
+    });
+  });
+  document.getElementById('logo').addEventListener('mouseleave', reset);
+})();
+
+// --- Light/Dark Theme Toggle ---
+function toggleLightMode(on) {
+  document.body.classList.toggle('light-theme', on);
+  localStorage.setItem('lightMode', on ? '1' : '0');
+}
+(function initLightMode() {
+  const saved = localStorage.getItem('lightMode');
+  if (saved === '1') {
+    document.body.classList.add('light-theme');
+    const cb = document.getElementById('light-mode-toggle');
+    if (cb) cb.checked = true;
+  }
+})();
+
+// --- Answer Snippet ---
+// Stash result data for answer snippet use
+let _lastStreamResults = [];
+function _stashResultData(r) { _lastStreamResults.push(r); }
+
+function _showAnswerSnippet() {
+  const resultsDiv = document.getElementById('results');
+  if (!_lastStreamResults.length) return;
+  // Don't create a duplicate
+  if (document.getElementById('answer-snippet')) return;
+
+  // Find the best candidate: prefer result with a good meta_description
+  let best = null;
+  for (const r of _lastStreamResults.slice(0, 3)) {
+    const meta = (r.meta_description || '').trim();
+    if (meta.length >= 50 && /[a-zA-Z]/.test(meta)) {
+      best = { text: meta, title: r.title, url: r.url };
+      break;
+    }
+  }
+  // Fallback to first result's snippet if no good meta_description
+  if (!best) {
+    const r = _lastStreamResults[0];
+    const snip = (r.snippet || '').trim();
+    if (snip.length < 60 || !/[a-zA-Z]/.test(snip)) return;
+    best = { text: snip, title: r.title, url: r.url };
+  }
+
+  const answerEl = document.createElement('div');
+  answerEl.className = 'answer-snippet';
+  answerEl.id = 'answer-snippet';
+  answerEl.innerHTML = esc(best.text)
+    + `<div class="answer-snippet-source">Source: <a href="${esc(best.url)}" target="_blank">${esc(best.title || 'Link')}</a></div>`;
+  const infoEl = document.getElementById('results-info');
+  if (infoEl && infoEl.nextSibling) {
+    const corrBanner = resultsDiv.querySelector('.correction-banner');
+    const insertAfter = corrBanner || infoEl;
+    insertAfter.parentNode.insertBefore(answerEl, insertAfter.nextSibling);
+  }
+}
+
+// --- Related Searches ---
+async function _fetchRelatedSearches(q) {
+  try {
+    const res = await fetch(`${API}/api/related?q=${encodeURIComponent(q)}&limit=8`);
+    if (!res.ok) return;
+    const data = await res.json();
+    const container = document.getElementById('related-searches');
+    if (data.related && data.related.length) {
+      container.innerHTML = '<div class="related-searches-title">Related Searches</div>'
+        + data.related.map(r => `<span class="related-tag" onclick="document.getElementById('search-input').value='${esc(r).replace(/'/g,"\\'")}'; doSearch();">${esc(r)}</span>`).join('');
+      container.style.display = 'block';
+    } else {
+      container.style.display = 'none';
+    }
+  } catch {
+    document.getElementById('related-searches').style.display = 'none';
+  }
+}
+
+// --- Keyboard Shortcuts ---
+let _selectedResultIdx = -1;
+document.addEventListener('keydown', e => {
+  // Don't intercept if typing in an input
+  const tag = document.activeElement.tagName;
+  const inInput = tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT';
+
+  // "/" to focus search
+  if (e.key === '/' && !inInput) {
+    e.preventDefault();
+    document.getElementById('search-input').focus();
+    return;
+  }
+
+  // Esc to clear
+  if (e.key === 'Escape') {
+    if (document.getElementById('settings-overlay').classList.contains('open')) {
+      closeSettings();
+    } else if (document.getElementById('lightbox').classList.contains('open')) {
+      document.getElementById('lightbox').classList.remove('open');
+    } else if (inInput) {
+      document.activeElement.blur();
+    }
+    return;
+  }
+
+  if (inInput) return;
+
+  // j/k to navigate results
+  const items = document.querySelectorAll('#results .result-item');
+  if (!items.length) return;
+
+  if (e.key === 'j' || e.key === 'J') {
+    e.preventDefault();
+    _selectedResultIdx = Math.min(_selectedResultIdx + 1, items.length - 1);
+    _highlightResult(items);
+  } else if (e.key === 'k' || e.key === 'K') {
+    e.preventDefault();
+    _selectedResultIdx = Math.max(_selectedResultIdx - 1, 0);
+    _highlightResult(items);
+  } else if (e.key === 'Enter' && _selectedResultIdx >= 0) {
+    const item = items[_selectedResultIdx];
+    const link = item.querySelector('.result-title a');
+    if (link) {
+      _trackClick(item.dataset.url, parseInt(item.dataset.pos || '0'));
+      window.open(link.href, '_blank');
+    }
+  }
+});
+
+function _highlightResult(items) {
+  items.forEach((item, i) => {
+    item.style.outline = i === _selectedResultIdx ? '2px solid var(--accent)' : '';
+    item.style.outlineOffset = i === _selectedResultIdx ? '-2px' : '';
+  });
+  if (_selectedResultIdx >= 0 && items[_selectedResultIdx]) {
+    items[_selectedResultIdx].scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+  }
+}
+
+// Reset result selection on new search
+const _origDoSearch = doSearch;
+
+// --- URL popstate (back/forward navigation) ---
+window.addEventListener('popstate', () => {
+  const params = new URLSearchParams(window.location.search);
+  const q = params.get('q');
+  if (q) {
+    document.getElementById('search-input').value = q;
+    _skipPushState = true;
+    doSearch();
+  } else {
+    // Back to homepage
+    document.getElementById('search-input').value = '';
+    document.getElementById('results').innerHTML = '';
+    document.getElementById('search-container').classList.remove('has-results');
+    document.getElementById('homepage-content').classList.remove('hidden');
+    document.getElementById('site-footer').style.display = '';
+    document.getElementById('related-searches').style.display = 'none';
+    hideInfoPage();
+    renderSearchHistory();
+  }
+});
+
+// --- Homepage init ---
+renderSearchHistory();
+
+// Handle ?q= on initial load (update existing handler)
+(function() {
+  const params = new URLSearchParams(window.location.search);
+  const q = params.get('q');
+  if (q) {
+    document.getElementById('homepage-content').classList.add('hidden');
+    document.getElementById('site-footer').style.display = 'none';
+  }
+})();
+</script>
+</body>
+</html>

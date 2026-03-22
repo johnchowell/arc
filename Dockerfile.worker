@@ -1,0 +1,37 @@
+# ArcSearch Distributed Worker — Open Source, Hardened Container
+FROM python:3.12-slim
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    build-essential libxml2-dev libxslt1-dev \
+    && rm -rf /var/lib/apt/lists/*
+
+RUN groupadd -r arcsearch && useradd -r -g arcsearch -m -s /bin/false arcsearch
+
+WORKDIR /app
+
+COPY pyproject.toml .
+COPY src/ src/
+COPY static/ static/
+COPY worker-deploy/entrypoint.sh /entrypoint.sh
+
+RUN pip install --no-cache-dir torch torchvision --index-url https://download.pytorch.org/whl/cpu && \
+    pip install --no-cache-dir sentence-transformers open-clip-torch websockets && \
+    pip install --no-cache-dir -e . 2>/dev/null || true
+
+# Remove build tools (reduce attack surface)
+RUN apt-get purge -y build-essential && apt-get autoremove -y && rm -rf /var/lib/apt/lists/*
+
+RUN chmod +x /entrypoint.sh && \
+    mkdir -p /app/data/html /app/data/tokenizer /home/arcsearch/.cache /run/secrets && \
+    chown -R arcsearch:arcsearch /app /home/arcsearch /run/secrets
+
+ENV PYTHONPATH=/app/src
+ENV DISTRIBUTED_MODE=true
+ENV HUB_ROLE=worker
+ENV HOME=/home/arcsearch
+ENV HF_HOME=/app/data/.cache/huggingface
+
+USER arcsearch
+EXPOSE 8901
+
+ENTRYPOINT ["/entrypoint.sh"]

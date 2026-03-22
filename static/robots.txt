@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+Disallow: /api/
+Disallow: /static/
+
+Sitemap: https://www.arcsearch.net/sitemap.xml

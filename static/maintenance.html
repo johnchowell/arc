@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ARC Search - Be Back Soon</title>
+<meta name="robots" content="noindex">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: 'JetBrains Mono', 'SF Mono', 'Fira Code', 'Consolas', monospace;
+  background: #0a0a0a;
+  color: #e0e0e0;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 20px;
+}
+.container { max-width: 500px; }
+.logo {
+  font-size: 48px;
+  font-weight: 900;
+  letter-spacing: 6px;
+  margin-bottom: 32px;
+}
+.logo .a, .logo .r, .logo .c { color: #4a9eff; text-shadow: 0 0 6px rgba(74,158,255,0.5), 0 0 14px rgba(74,158,255,0.25); }
+.logo .s, .logo .e, .logo .h { color: #e0e0e0; }
+.message {
+  font-size: 18px;
+  color: #808080;
+  margin-bottom: 16px;
+  line-height: 1.6;
+}
+.submessage {
+  font-size: 12px;
+  color: #555;
+}
+.spinner {
+  width: 24px;
+  height: 24px;
+  border: 2px solid #2a2a2a;
+  border-top-color: #4a9eff;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin: 24px auto;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="logo">
+    <span class="s">S</span><span class="e">E</span><span class="a">A</span><span class="r">R</span><span class="c">C</span><span class="h">H</span>
+  </div>
+  <div class="message">Be back soon...</div>
+  <div class="spinner"></div>
+  <div class="submessage">We're updating things behind the scenes. This usually takes a couple of minutes.</div>
+</div>
+<script>
+// Auto-refresh every 15 seconds to check if the site is back
+setTimeout(() => location.reload(), 15000);
+</script>
+</body>
+</html>
